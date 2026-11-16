@@ -85,7 +85,7 @@ const PIEZAS_DATA = [
         descripcion: "El poporo guardaba cal en polvo que se mezclaba con hojas de coca en un uso ritual andino. Esta botella con hombros lleva una figura femenina a cada lado y, según el Met, aún conserva cal en su interior. N.º 1991.419.22.",
         modelo: "poporo_dorado",
         pos: new THREE.Vector3(-38, 0, 20),
-        centroSala: new THREE.Vector3(-32, 0, 26) // <-- Centro de la Sala 1
+        centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 2, 
@@ -96,7 +96,7 @@ const PIEZAS_DATA = [
         descripcion: "Alfiler de tumbaga hecho con fundición a la cera perdida, pulido y soldadura. N.º 17448.",
         modelo: "pin_quimbaya_color",
         pos: new THREE.Vector3(-38, 0, 26),
-        centroSala: new THREE.Vector3(-32, 0, 26) // <-- Centro de la Sala 1
+        centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 3, 
@@ -107,18 +107,96 @@ const PIEZAS_DATA = [
         descripcion: "Broche de tumbaga hecho con cera perdida, pulido y soldadura. N.º 17461.",
         modelo: "pin_quimbaya_culture (1)",
         pos: new THREE.Vector3(-38, 0, 32),
-        centroSala: new THREE.Vector3(-32, 0, 26) // <-- Centro de la Sala 1
+        centroSala: new THREE.Vector3(-32, 0, 26)
     },
-            {
-        id: 7, // <-- deja aquí el id que ya usas para el collar
+    {
+        id: 7,
         nombre: "Collar separador Quimbaya",
         cultura: "Quimbaya (fecha: por completar)",
         museo: "Museo de América, Madrid",
         pais: "España",
         descripcion: "Collar separador formado por 11 cuentas tubulares unidas en una barra. Ficha por completar: fecha, técnica y n.º de objeto.",
         modelo: "collar_separador_quimbaya",
-        pos: new THREE.Vector3(-32, 0, 14),  // pegada a la pared norte de la Sala 1, lejos de la puerta
-        centroSala: new THREE.Vector3(-32, 0, 26) // <-- Centro de la Sala 1
+        pos: new THREE.Vector3(-32, 0, 14),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    // --- NUEVAS PIEZAS AGREGADAS ---
+    {
+        id: 8,
+        nombre: "Ear Ornament Quimbaya",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Ornamento de oreja Quimbaya. Ficha por completar.",
+        modelo: "ear_ornament_quimbaya_culture",
+        pos: new THREE.Vector3(-26, 0, 18),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 9,
+        nombre: "Gold Incense Burner",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Incensario de oro Quimbaya. Ficha por completar.",
+        modelo: "gold_incense_burner_quimbaya_culture",
+        pos: new THREE.Vector3(-26, 0, 22),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 10,
+        nombre: "Helmet Quimbaya",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Casco Quimbaya. Ficha por completar.",
+        modelo: "helmet_quimbaya_culture (1)",
+        pos: new THREE.Vector3(-26, 0, 26),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 11,
+        nombre: "Necklace Piece Quimbaya",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Pieza de collar Quimbaya. Ficha por completar.",
+        modelo: "necklace_piece_quimbaya_culture",
+        pos: new THREE.Vector3(-26, 0, 30),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 12,
+        nombre: "Pendant Quimbaya (1)",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Colgante Quimbaya. Ficha por completar.",
+        modelo: "pendant_quimbaya_culture (1)",
+        pos: new THREE.Vector3(-26, 0, 34),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 13,
+        nombre: "Pendant Quimbaya Tres",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Colgante Quimbaya 3. Ficha por completar.",
+        modelo: "pendant_quimbaya_culture_tres",
+        pos: new THREE.Vector3(-32, 0, 38),
+        centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 14,
+        nombre: "Pin Quimbaya Gallo",
+        cultura: "Quimbaya (por completar)",
+        museo: "Por definir",
+        pais: "Por definir",
+        descripcion: "Alfiler gallo Quimbaya. Ficha por completar.",
+        modelo: "pin_quimbaya_culture_gallo",
+        pos: new THREE.Vector3(-38, 0, 14),
+        centroSala: new THREE.Vector3(-32, 0, 26)
     },
 
     // --- SALA 2: MUISCA (Reservado, centro: -32, 0, 0) ---
@@ -133,7 +211,7 @@ const PIEZAS_DATA = [
         descripcion: "Las alas y la cola extendidas son comunes en Costa Rica y Panamá, pero aquí la pieza es más ornamentada, con trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Las garras sostienen una serpiente estilizada de dos cabezas. N.º 1974.271.12.",
         modelo: "ave_tairona",
         pos: new THREE.Vector3(-38, 0, -20),
-        centroSala: new THREE.Vector3(-32, 0, -26) // <-- Centro de la Sala 3
+        centroSala: new THREE.Vector3(-32, 0, -26)
     },
     {
         id: 5, 
@@ -144,7 +222,7 @@ const PIEZAS_DATA = [
         descripcion: "Pectoral de oro tairona, pieza de orfebrería de alta complejidad.",
         modelo: "pectoral_dorado",
         pos: new THREE.Vector3(-38, 0, -32),
-        centroSala: new THREE.Vector3(-32, 0, -26) // <-- Centro de la Sala 3
+        centroSala: new THREE.Vector3(-32, 0, -26)
     },
 
     // --- SALA 4: EL RESTO DE COLOMBIA (Centro: -16, 0, -32) ---
@@ -157,7 +235,7 @@ const PIEZAS_DATA = [
         descripcion: "Este ornamento nasal de lámina de oro martillada combina una pieza central en forma de media luna con dos volutas laterales. El museo lo atribuye con reservas a Colombia, y su cultura de origen no está confirmada. N.º 1974.271.64.",
         modelo: "nariguera_dorada",
         pos: new THREE.Vector3(-16, 0, -38),
-        centroSala: new THREE.Vector3(-16, 0, -32) // <-- Centro de la Sala 4
+        centroSala: new THREE.Vector3(-16, 0, -32)
     }
 ];
 

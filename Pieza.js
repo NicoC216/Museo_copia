@@ -10,6 +10,15 @@ const MODELOS_GLB = {
     5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },  // Pectoral Dorado
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },  // Ornamento nasal (ajusta la ruta si está en otra carpeta)
     7: { archivo: 'modelos/Sala1/collar_separador_quimbaya.glb', dx: 0, alto: 0.14, ancho: 1.1, color: true, emisivo: 0x555555 },  // Collar separador
+    
+    // --- NUEVAS PIEZAS SALA 1 ---
+    8: { archivo: 'modelos/Sala1/ear_ornament_quimbaya_culture.glb', dx: 0 },
+    9: { archivo: 'modelos/Sala1/gold_incense_burner_quimbaya_culture.glb', dx: 0 },
+    10: { archivo: 'modelos/Sala1/helmet_quimbaya_culture (1).glb', dx: 0 },
+    11: { archivo: 'modelos/Sala1/necklace_piece_quimbaya_culture.glb', dx: 0 },
+    12: { archivo: 'modelos/Sala1/pendant_quimbaya_culture (1).glb', dx: 0 },
+    13: { archivo: 'modelos/Sala1/pendant_quimbaya_culture_tres.glb', dx: 0 },
+    14: { archivo: 'modelos/Sala1/pin_quimbaya_culture_gallo.glb', dx: 0 },
 };
 
 const ALTURA_FLOTANDO = 2.0; // altura del CENTRO de la pieza (el pedestal llega a 1.0 y la vitrina va de 1.0 a 2.8). Sube o baja este número a gusto.
