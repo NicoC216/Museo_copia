@@ -240,10 +240,13 @@ const PIEZAS_DATA = [
 ];
 
 const botones = [];
-PIEZAS_DATA.forEach(datos => {
-    // Le pasamos el centro de sala específico de la pieza a la clase Pieza
-    const p = new window.Pieza(datos, scene, datos.centroSala);
-    botones.push(p.boton);
+// Usamos un setTimeout para cargar las piezas una por una (con 300ms de diferencia)
+// Esto evita que GitHub Pages bloquee las descargas por saturación de red (ERR_HTTP2_FLOW_CONTROL_ERROR)
+PIEZAS_DATA.forEach((datos, index) => {
+    setTimeout(() => {
+        const p = new window.Pieza(datos, scene, datos.centroSala);
+        botones.push(p.boton);
+    }, index * 300); // 300 milisegundos entre cada pieza
 });
 
 window.inicializarUI();

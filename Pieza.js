@@ -5,7 +5,7 @@ const MODELOS_GLB = {
     // ancho = (opcional) ancho máximo de ESTA pieza; si no se pone, se usa ANCHO_MAX
     1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },  // Poporo Quimbaya
     2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 }, // Alfiler Quimbaya
-    3: { archivo: 'modelos/Sala1/pin_quimbaya_culture (1).glb', dx: 0 }, // Broche / Alfiler Quimbaya
+    3: { archivo: 'modelos/Sala1/pin_quimbaya_culture.glb', dx: 0 }, // Broche / Alfiler Quimbaya (Nombre corregido sin espacios)
     4: { archivo: 'modelos/Sala3/ave_tairona.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },  // Pectoral de ave tairona
     5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },  // Pectoral Dorado
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },  // Ornamento nasal (ajusta la ruta si está en otra carpeta)
@@ -14,9 +14,9 @@ const MODELOS_GLB = {
     // --- NUEVAS PIEZAS SALA 1 ---
     8: { archivo: 'modelos/Sala1/ear_ornament_quimbaya_culture.glb', dx: 0 },
     9: { archivo: 'modelos/Sala1/gold_incense_burner_quimbaya_culture.glb', dx: 0 },
-    10: { archivo: 'modelos/Sala1/helmet_quimbaya_culture (1).glb', dx: 0 },
+    10: { archivo: 'modelos/Sala1/helmet_quimbaya_culture.glb', dx: 0 }, // Nombre corregido sin espacios
     11: { archivo: 'modelos/Sala1/necklace_piece_quimbaya_culture.glb', dx: 0 },
-    12: { archivo: 'modelos/Sala1/pendant_quimbaya_culture (1).glb', dx: 0 },
+    12: { archivo: 'modelos/Sala1/pendant_quimbaya_culture.glb', dx: 0 }, // Nombre corregido sin espacios
     13: { archivo: 'modelos/Sala1/pendant_quimbaya_culture_tres.glb', dx: 0 },
     14: { archivo: 'modelos/Sala1/pin_quimbaya_culture_gallo.glb', dx: 0 },
 };
@@ -109,7 +109,14 @@ window.Pieza = class Pieza {
                                     emissive: (glb.emisivo !== undefined ? glb.emisivo : 0x555555), emissiveMap: mapa   // autoiluminación suave: sube/baja a gusto
                                 });
                             } else {
-                                child.material = window.matOro;
+                                // CORRECCIÓN: Usamos un material estándar con un poco menos de "metalness".
+                                // Un metalness de 1.0 sin mapa de entorno en Three.js hace que el objeto se vea negro.
+                                child.material = new THREE.MeshStandardMaterial({ 
+                                    color: 0xffd700, // Color oro
+                                    metalness: 0.6,  // Reducido para que no se vea negro
+                                    roughness: 0.3, 
+                                    emissive: 0x332200 // Brillo base
+                                });
                             }
                             child.castShadow = true;
                             child.receiveShadow = true;
