@@ -1,6 +1,3 @@
-// ============================================================
-// Pieza.js
-// ============================================================
 const MODELOS_GLB = {
     1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },
     2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 },
@@ -22,7 +19,6 @@ const ALTURA_FLOTANDO = 2.0;
 const ALTO_PIEZA = 0.9;
 const ANCHO_MAX = 1.0;
 
-// Loader compartido con soporte DRACO
 let _loaderGLB = null;
 function obtenerLoader() {
     if (_loaderGLB) return _loaderGLB;
@@ -80,7 +76,6 @@ window.Pieza = class Pieza {
         vitrina.receiveShadow = false;
         this.scene.add(vitrina);
 
-        // Colisión del pedestal para que no se pueda atravesar
         this.colisiones.push({
             minX: x - 0.75, maxX: x + 0.75,
             minZ: z - 0.75, maxZ: z + 0.75,
@@ -116,13 +111,12 @@ window.Pieza = class Pieza {
         let resuelto = false;
         const finalizar = () => { if (!resuelto) { resuelto = true; this._notificarCargado(); } };
 
-        // Timeout de seguridad: 12 segundos
         const timeoutId = setTimeout(() => {
             if (resuelto) return;
             console.warn(`[Pieza ${this.datos.id}] Timeout al cargar ${fuente}; usando respaldo.`);
             this.crearProcedural();
             finalizar();
-        }, 12000);
+        }, 15000);
 
         try {
             loader.load(
@@ -137,7 +131,6 @@ window.Pieza = class Pieza {
                         const centro = caja.getCenter(new THREE.Vector3());
 
                         if (tam.y === 0 || !isFinite(tam.y)) {
-                            // Modelo vacío o inválido
                             this.crearProcedural();
                             finalizar();
                             return;
@@ -159,25 +152,27 @@ window.Pieza = class Pieza {
                                     const mapa = child.material.map;
                                     mapa.encoding = THREE.LinearEncoding;
                                     child.material = new THREE.MeshStandardMaterial({
-                                        map: mapa, metalness: 0.4, roughness: 0.45,
+                                        map: mapa, metalness: 0.3, roughness: 0.5,
                                         emissive: (glb.emisivo !== undefined ? glb.emisivo : 0x555555),
                                         emissiveMap: mapa
                                     });
                                 } else {
+                                    // Ajuste clave: bajar el metalness para que no se vean negros sin envMap
                                     child.material = new THREE.MeshStandardMaterial({
-                                        color: 0xffd700,
-                                        metalness: 0.55,
-                                        roughness: 0.35,
-                                        emissive: 0x2a1f00
+                                        color: 0xffcc00, // Dorado más brillante
+                                        metalness: 0.2,  // Reducido drásticamente
+                                        roughness: 0.4,
+                                        emissive: 0x553300 // Leve iluminación propia
                                     });
                                 }
                                 child.castShadow = false;
                                 child.receiveShadow = false;
-                                child.frustumCulled = true;
+                                child.frustumCulled = false; // Previene que desaparezcan por error de cámara
                             }
                         });
 
                         this.piezaMesh.add(modelo);
+                        console.log(`[Pieza ${this.datos.id}] Cargada con éxito: ${fuente}`);
                         finalizar();
                     } catch (e) {
                         console.warn(`[Pieza ${this.datos.id}] Error procesando GLB:`, e);
@@ -188,7 +183,7 @@ window.Pieza = class Pieza {
                 undefined,
                 (error) => {
                     clearTimeout(timeoutId);
-                    console.warn(`[Pieza ${this.datos.id}] No se pudo cargar ${fuente}:`, error);
+                    console.error(`[Pieza ${this.datos.id}] Error 404/CORS al cargar ${fuente}:`, error);
                     this.crearProcedural();
                     finalizar();
                 }

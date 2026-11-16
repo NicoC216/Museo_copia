@@ -1,6 +1,3 @@
-// ============================================================
-// main.js
-// ============================================================
 const canvas = document.getElementById('c');
 if (typeof THREE === 'undefined') {
     document.body.innerHTML = '<p style="color:white;text-align:center;padding:2rem;font-family:Georgia,serif;">Error: no se pudo cargar three.js. Revisa tu conexión a internet.</p>';
@@ -68,9 +65,10 @@ scene.fog = new THREE.Fog(0x0a0a0a, 40, 100);
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.rotation.order = 'YXZ';
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.5));
-const dirLight = new THREE.DirectionalLight(0xfff5e6, 0.7);
+// Luces ajustadas para que los metales brillen sin ser negros
+scene.add(new THREE.AmbientLight(0xffffff, 0.8)); 
+scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.7));
+const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.0);
 dirLight.position.set(20, 40, 20);
 dirLight.castShadow = !SIN_GPU;
 if (dirLight.shadow) {
@@ -86,8 +84,7 @@ scene.add(dirLight);
 const colisiones = window.crearMuseo(scene);
 
 const PIEZAS_DATA = [
-    // --- SALA 1: EL TESORO QUIMBAYA (Centro: -32, 0, 26) ---
-    // Distribución limpia: Oeste(4), Sur(4), Norte(3). Este libre para no bloquear la puerta.
+    // --- SALA 1: EL TESORO QUIMBAYA ---
     {
         id: 1, nombre: "Poporo Quimbaya", cultura: "Quimbaya, siglos I–VI d. C.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
         descripcion: "El poporo guardaba cal en polvo que se mezclaba con hojas de coca en un uso ritual andino. Esta botella con hombros lleva una figura femenina a cada lado y, según el Met, aún conserva cal en su interior. N.º 1991.419.22.",
@@ -144,7 +141,7 @@ const PIEZAS_DATA = [
         modelo: "pendant_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
 
-    // --- SALA 3: LOS TAIRONA (Centro: -32, 0, -26) ---
+    // --- SALA 3: LOS TAIRONA ---
     {
         id: 4, nombre: "Pectoral de Ave (Tairona)", cultura: "Tairona, siglos X–XVI, Colombia. Aleación de oro.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
         descripcion: "Las alas y la cola extendidas son comunes en Costa Rica y Panamá, pero aquí la pieza es más ornamentada, con trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Las garras sostienen una serpiente estilizada de dos cabezas. N.º 1974.271.12.",
@@ -156,7 +153,7 @@ const PIEZAS_DATA = [
         modelo: "pectoral_dorado", pos: new THREE.Vector3(-38, 0, -32), centroSala: new THREE.Vector3(-32, 0, -26)
     },
 
-    // --- SALA 4: EL RESTO DE COLOMBIA (Centro: -16, 0, -32) ---
+    // --- SALA 4: EL RESTO DE COLOMBIA ---
     {
         id: 6, nombre: "Nose Ornament (ornamento nasal)", cultura: "Colombia (origen atribuido con reservas), siglos X–XVI. Oro martillado.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
         descripcion: "Este ornamento nasal de lámina de oro martillada combina una pieza central en forma de media luna con dos volutas laterales. El museo lo atribuye con reservas a Colombia, y su cultura de origen no está confirmada. N.º 1974.271.64.",
@@ -192,7 +189,6 @@ PIEZAS_DATA.forEach((datos) => {
 window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
-// Pre-compilar shaders para evitar tirones al entrar
 try { renderer.compile(scene, camera); } catch (e) {}
 
 let pausado = false;
