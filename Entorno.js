@@ -4,7 +4,7 @@ window.crearMuseo = function(scene) {
     function crearBox(w, h, d, x, y, z, material, tieneColision = true) {
         const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
         mesh.position.set(x, y, z);
-        mesh.castShadow = true;
+        mesh.castShadow = false; // OPTIMIZACIÓN: las paredes no proyectan sombras
         mesh.receiveShadow = true;
         scene.add(mesh);
 
@@ -54,10 +54,12 @@ window.crearMuseo = function(scene) {
     }
 
     function addLuzSala(x, z) {
-        const point = new THREE.PointLight(0xffbb55, 2.0, 20);
+        const point = new THREE.PointLight(0xffbb55, 1.0, 20); 
         point.position.set(x, 4, z); scene.add(point);
-        const spot = new THREE.SpotLight(0xffd700, 3.5, 12, Math.PI / 4, 0.5, 1);
-        spot.position.set(x, 5.5, z); spot.target.position.set(x, 0, z); spot.castShadow = true;
+        const spot = new THREE.SpotLight(0xffd700, 2.0, 15, Math.PI / 4, 0.5, 1);
+        spot.position.set(x, 5.5, z); 
+        spot.target.position.set(x, 0, z); 
+        spot.castShadow = false; // OPTIMIZACIÓN CRÍTICA: Desactivar sombras en las salas
         scene.add(spot); scene.add(spot.target);
     }
     function addLuzCafe(x, z) {
@@ -71,13 +73,12 @@ window.crearMuseo = function(scene) {
     }
 
     // ============================================================
-    //   FUNCIONES DE DECORACIÓN (cafetería y baños)
+    //   FUNCIONES DE DECORACIÓN
     // ============================================================
-
     function crearMesaCafe(x, z) {
         const tapa = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.06, 20), window.matMaderaClara);
         tapa.position.set(x, 0.95, z);
-        tapa.castShadow = true; tapa.receiveShadow = true;
+        tapa.castShadow = false; tapa.receiveShadow = true; // OPTIMIZACIÓN
         scene.add(tapa);
         const pata = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 8), window.matMetal);
         pata.position.set(x, 0.48, z);
@@ -111,7 +112,7 @@ window.crearMuseo = function(scene) {
         grupo.position.set(x, 0, z);
         grupo.rotation.y = rotY;
         const cuerpo = new THREE.Mesh(new THREE.BoxGeometry(ancho, 1.1, 0.9), window.matMadera);
-        cuerpo.position.set(0, 0.55, 0); cuerpo.castShadow = true; grupo.add(cuerpo);
+        cuerpo.position.set(0, 0.55, 0); cuerpo.castShadow = false; grupo.add(cuerpo); // OPTIMIZACIÓN
         const tapa = new THREE.Mesh(new THREE.BoxGeometry(ancho + 0.1, 0.06, 1.0), window.matMetal);
         tapa.position.set(0, 1.13, 0); grupo.add(tapa);
         const linea = new THREE.Mesh(new THREE.BoxGeometry(ancho - 0.2, 0.04, 0.02), window.matOro);
@@ -139,11 +140,11 @@ window.crearMuseo = function(scene) {
 
     function crearPlanta(x, z, tamaño = 1) {
         const maceta = new THREE.Mesh(new THREE.CylinderGeometry(0.22*tamaño, 0.16*tamaño, 0.35*tamaño, 12), window.matMaceta);
-        maceta.position.set(x, 0.175*tamaño, z); maceta.castShadow = true; scene.add(maceta);
+        maceta.position.set(x, 0.175*tamaño, z); maceta.castShadow = false; scene.add(maceta); // OPTIMIZACIÓN
         const hojasConfig = [[0, 0.55, 0, 0.35], [0.15, 0.45, 0.1, 0.22], [-0.15, 0.45, -0.1, 0.22], [0.1, 0.7, -0.1, 0.20], [-0.1, 0.7, 0.1, 0.20]];
         hojasConfig.forEach(([dx, dy, dz, r]) => {
             const hoja = new THREE.Mesh(new THREE.SphereGeometry(r*tamaño, 8, 6), window.matPlanta);
-            hoja.position.set(x + dx*tamaño, dy*tamaño, z + dz*tamaño); hoja.castShadow = true; scene.add(hoja);
+            hoja.position.set(x + dx*tamaño, dy*tamaño, z + dz*tamaño); hoja.castShadow = false; scene.add(hoja); // OPTIMIZACIÓN
         });
         colisiones.push({ minX: x - 0.25*tamaño, maxX: x + 0.25*tamaño, minZ: z - 0.25*tamaño, maxZ: z + 0.25*tamaño, minY: 0, maxY: 1.5*tamaño });
     }
@@ -204,7 +205,6 @@ window.crearMuseo = function(scene) {
     }
 
     // --- MODELOS DE BAÑO ---
-
     function crearCubiculoMejorado(x, z, rotY, esAccesible = false) {
         const grupo = new THREE.Group();
         grupo.position.set(x, 0, z);
@@ -214,23 +214,23 @@ window.crearMuseo = function(scene) {
         const H = 2.4;
         const grosor = 0.08;
         const side1 = new THREE.Mesh(new THREE.BoxGeometry(grosor, H, D), window.matParedBano);
-        side1.position.set(-W/2, H/2, 0); side1.castShadow = true; grupo.add(side1);
+        side1.position.set(-W/2, H/2, 0); side1.castShadow = false; grupo.add(side1); // OPTIMIZACIÓN
         const side2 = new THREE.Mesh(new THREE.BoxGeometry(grosor, H, D), window.matParedBano);
-        side2.position.set(W/2, H/2, 0); side2.castShadow = true; grupo.add(side2);
+        side2.position.set(W/2, H/2, 0); side2.castShadow = false; grupo.add(side2); // OPTIMIZACIÓN
         const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, grosor), window.matParedBano);
-        back.position.set(0, H/2, -D/2); back.castShadow = true; grupo.add(back);
+        back.position.set(0, H/2, -D/2); back.castShadow = false; grupo.add(back); // OPTIMIZACIÓN
         const puerta = new THREE.Mesh(new THREE.BoxGeometry(W*0.6, H*0.9, 0.04), window.matMaderaClara);
         puerta.position.set(-W*0.2, H*0.45, D/2);
         puerta.rotation.y = Math.PI / 4;
         grupo.add(puerta);
         const baseInodoro = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.18, 0.4, 16), window.matPorcelana);
-        baseInodoro.position.set(0, 0.2, -D/4); baseInodoro.castShadow = true; grupo.add(baseInodoro);
+        baseInodoro.position.set(0, 0.2, -D/4); baseInodoro.castShadow = false; grupo.add(baseInodoro); // OPTIMIZACIÓN
         const taza = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.22, 0.15, 16), window.matPorcelana);
         taza.position.set(0, 0.45, -D/4); grupo.add(taza);
         const asiento = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.04, 8, 20), window.matPorcelana);
         asiento.position.set(0, 0.53, -D/4); asiento.rotation.x = Math.PI / 2; grupo.add(asiento);
         const tanque = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.4, 0.2), window.matPorcelana);
-        tanque.position.set(0, 0.7, -D/2 + 0.15); tanque.castShadow = true; grupo.add(tanque);
+        tanque.position.set(0, 0.7, -D/2 + 0.15); tanque.castShadow = false; grupo.add(tanque); // OPTIMIZACIÓN
         const tuberia = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8), window.matAcero);
         tuberia.position.set(0, 0.9, -D/2 + 0.15); grupo.add(tuberia);
         const boton = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.02, 12), window.matAcero);
@@ -275,7 +275,7 @@ window.crearMuseo = function(scene) {
         const D = 0.6;
         const H = 0.85;
         const meson = new THREE.Mesh(new THREE.BoxGeometry(anchoTotal, 0.1, D), window.matPorcelana);
-        meson.position.set(0, H, 0); meson.castShadow = true; grupo.add(meson);
+        meson.position.set(0, H, 0); meson.castShadow = false; grupo.add(meson); // OPTIMIZACIÓN
         const gabinete = new THREE.Mesh(new THREE.BoxGeometry(anchoTotal - 0.1, H - 0.1, D - 0.1), window.matMadera);
         gabinete.position.set(0, (H - 0.1)/2, 0); grupo.add(gabinete);
         const espejo = new THREE.Mesh(new THREE.BoxGeometry(anchoTotal - 0.2, 1.0, 0.03), window.matEspejo);
@@ -312,7 +312,7 @@ window.crearMuseo = function(scene) {
     function crearBoteBasura(x, z) {
         const bote = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.15, 0.55, 12), window.matNegro);
         bote.position.set(x, 0.275, z);
-        bote.castShadow = true;
+        bote.castShadow = false; // OPTIMIZACIÓN
         scene.add(bote);
         const tapa = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.04, 12), window.matAcero);
         tapa.position.set(x, 0.57, z);
@@ -333,28 +333,26 @@ window.crearMuseo = function(scene) {
     window.objetosFlotantes = [];
     
     function crearInstalacionCentral() {
-        // Luz cálida desde abajo iluminando la escultura y las piezas
-        const luzCentral = new THREE.SpotLight(0xffcc66, 5, 15, Math.PI / 3, 0.5, 1);
+        const luzCentral = new THREE.SpotLight(0xffcc66, 3, 15, Math.PI / 3, 0.5, 1);
         luzCentral.position.set(0, 0.5, 0);
         luzCentral.target.position.set(0, 6, 0);
+        luzCentral.castShadow = false; // OPTIMIZACIÓN CRÍTICA
         scene.add(luzCentral);
         scene.add(luzCentral.target);
 
-        // Esfera central que brilla
         const esferaBase = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), window.matBombilla);
         esferaBase.position.set(0, 1.2, 0);
         scene.add(esferaBase);
 
-        // Hilos y piezas flotantes
-        const numPiezas = 45;
+        // Reducción drástica de piezas flotantes de 45 a 20 para no ahogar el procesador
+        const numPiezas = 20;
         for (let i = 0; i < numPiezas; i++) {
             const radio = 1.5 + Math.random() * 4.5;
             const angulo = Math.random() * Math.PI * 2;
             const x = Math.cos(angulo) * radio;
             const z = Math.sin(angulo) * radio;
-            const y = 2.5 + Math.random() * 3.0; // Entre 2.5m y 5.5m de altura
+            const y = 2.5 + Math.random() * 3.0;
 
-            // Cable desde el techo (y=6)
             const alturaCable = 6 - y;
             const cable = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.01, 0.01, alturaCable, 4),
@@ -363,7 +361,6 @@ window.crearMuseo = function(scene) {
             cable.position.set(x, y + alturaCable/2, z);
             scene.add(cable);
 
-            // Pieza de oro (variando entre esfera, octaedro y toro)
             let geo;
             const tipo = Math.floor(Math.random() * 3);
             if (tipo === 0) geo = new THREE.SphereGeometry(0.15, 12, 12);
@@ -372,10 +369,9 @@ window.crearMuseo = function(scene) {
 
             const pieza = new THREE.Mesh(geo, window.matOro);
             pieza.position.set(x, y, z);
-            pieza.castShadow = true;
+            pieza.castShadow = false; // OPTIMIZACIÓN CRÍTICA
             scene.add(pieza);
 
-            // Guardamos datos para la animación en main.js
             window.objetosFlotantes.push({
                 mesh: pieza,
                 baseY: y,
@@ -390,13 +386,11 @@ window.crearMuseo = function(scene) {
     // ============================================================
     //   CONSTRUCCIÓN DEL MUSEO
     // ============================================================
-
     crearBox(80, 0.2, 80, 0, -0.1, 0, window.matPiso, false); 
     crearBox(80, 0.2, 80, 0, 6, 0, window.matTecho, false);
     crearBox(24, 0.1, 24, 0, 0.05, 0, window.matPisoPatio, false);
     crearBox(4, 1, 4, 0, 0.5, 0, window.matOro); 
     
-    // Llamada a la instalación central
     crearInstalacionCentral();
 
     crearBox(80, window.PARED_H, 0.5, 0, window.PARED_H/2, -40, window.matMuroExterior);
@@ -444,7 +438,7 @@ window.crearMuseo = function(scene) {
     addLuzLobby(0, 35); addLuzLobby(0, 20); addLuzLobby(0, 0);
 
     // ============================================================
-    //   DECORACIÓN CAFETERÍA (x: 24..40, z: 12..40)
+    //   DECORACIÓN CAFETERÍA 
     // ============================================================
     crearBarraCafe(32, 13.5, 12, 0);
     crearMaquinaCafe(27, 1.16, 13.5, 0);
@@ -472,7 +466,7 @@ window.crearMuseo = function(scene) {
     crearReloj(32, 4.2, 12.4, 0);
 
     // ============================================================
-    //   DECORACIÓN BAÑO 1 (x: 24..40, z: -12..12)
+    //   DECORACIÓN BAÑO 1 
     // ============================================================
     crearPisoBano(32, 0, 16, 24);
     crearCubiculoMejorado(38.5, -8, -Math.PI/2, false);
@@ -489,7 +483,7 @@ window.crearMuseo = function(scene) {
     crearPlanta(25.3, 10.5, 0.7);
 
     // ============================================================
-    //   DECORACIÓN BAÑO 2 (x: 24..40, z: -40..-12)
+    //   DECORACIÓN BAÑO 2 
     // ============================================================
     crearPisoBano(32, -26, 16, 28);
     crearCubiculoMejorado(38.5, -36, -Math.PI/2, false);
