@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tesoro fuera de casa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background-color: #000; font-family: 'Georgia', serif; }
+        canvas { display: block; width: 100vw; height: 100vh; }
+        
+        #intro {
+            position: fixed; inset: 0; background: radial-gradient(circle, #1a1408, #0a0908);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #e8d9a8; z-index: 10; text-align: center; padding: 2rem;
+        }
+        #intro h1 { color: #e6c65c; font-size: 3rem; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(201,162,39,0.5); }
+        #intro p { max-width: 600px; margin-bottom: 2rem; line-height: 1.6; }
+        #btnEntrar { padding: 1rem 3rem; background: #c9a227; color: #000; border: none; border-radius: 5px; font-size: 1.2rem; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        #btnEntrar:hover { background: #e6c65c; transform: scale(1.05); }
+        
+        #hud { position: fixed; top: 10px; left: 10px; color: #c9a227; background: rgba(0,0,0,0.6); padding: 10px 15px; border-radius: 5px; display: none; font-size: 14px; pointer-events: none; z-index: 5; border: 1px solid #c9a227; }
+        #salir { position: fixed; top: 10px; right: 10px; padding: 8px 15px; background: #c9a227; color: #000; border: none; border-radius: 5px; cursor: pointer; display: none; z-index: 5; font-weight: bold; }
+        #cross { position: fixed; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.8); border-radius: 50%; transform: translate(-50%, -50%); display: none; z-index: 5; }
+        
+        #panelInfo {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(10, 10, 10, 0.95); border: 2px solid #c9a227; border-radius: 10px;
+            padding: 20px; color: #e8d9a8; max-width: 400px; display: none; z-index: 100;
+            text-align: center; font-family: 'Georgia', serif; box-shadow: 0 0 20px rgba(201,162,39,0.3);
+        }
+        #panelInfo h2 { color: #e6c65c; margin-bottom: 10px; }
+        #panelInfo .cult { font-size: 14px; color: #9a8a5a; }
+        #panelInfo .mus { font-size: 14px; margin-bottom: 10px; }
+        #panelInfo .desc { font-size: 14px; line-height: 1.5; }
+        #panelInfo button {
+            margin-top: 15px; padding: 8px 16px; background: #c9a227; border: none; 
+            border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
+    </style>
+
+    <!-- three.js r128 y su cargador de modelos .glb (misma versión) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Respaldo: si el cargador no llegó, se intenta con otro servidor -->
+    <script>
+        if (typeof THREE !== 'undefined' && !THREE.GLTFLoader) {
+            document.write('<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>');
+        }
+    </script>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    
+    <div id="intro">
+        <h1>Tesoro fuera de casa</h1>
+        <p>Un recorrido virtual por piezas de oro colombianas que se encuentran en museos de otros países. Explora las salas y descubre nuestra historia.</p>
+        <button id="btnEntrar">Entrar al Museo</button>
+    </div>
+
+    <div id="hud">
+        <b>WASD / Flechas</b> para moverse<br>
+        <b>Shift</b> para correr<br>
+        <b>Ratón</b> para mirar<br>
+        <b>P</b> para pausa
+    </div>
+    <button id="salir">Salir</button>
+    <div id="cross"></div>
+
+    <div id="pausa" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200; align-items:center; justify-content:center;">
+        <div style="background:rgba(10,10,10,0.97); border:2px solid #c9a227; border-radius:10px; padding:35px 50px; text-align:center; color:#e8d9a8; position:relative; min-width:260px; font-family:Georgia,serif;">
+            <button id="pausaCerrar" style="position:absolute; top:6px; right:12px; background:none; border:none; color:#c9a227; font-size:26px; cursor:pointer; font-weight:bold; line-height:1;">×</button>
+            <h2 style="color:#e6c65c; margin-bottom:22px; font-size:24px;">Pausa</h2>
+            <button id="pausaContinuar" style="display:block; width:100%; padding:10px; margin-bottom:10px; background:#c9a227; color:#000; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:16px;">Continuar</button>
+            <button id="pausaSalir" style="display:block; width:100%; padding:10px; background:#444; color:#e8d9a8; border:1px solid #c9a227; border-radius:5px; cursor:pointer; font-weight:bold; font-size:16px;">Salir</button>
+        </div>
+    </div>
+
+    <!-- IMPORTANTE: El orden de estos scripts es vital -->
+    <script src="Config.js"></script>
+    <script src="UI.js"></script>
+    <script src="Entorno.js"></script>
+    <script src="modelos_b64.js"></script>
+    <script src="Pieza.js"></script>
+    <script src="Jugador.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
