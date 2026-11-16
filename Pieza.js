@@ -1,13 +1,10 @@
-// ============================================================
-// Pieza.js
-// ============================================================
+// Diccionario que mapea el ID de cada pieza con su archivo .glb y configuraciones extra.
+// IMPORTANTE: Las rutas distinguen entre mayúsculas y minúsculas en GitHub Pages.
 const MODELOS_GLB = {
+    // --- SALA 1: QUIMBAYA ---
     1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },
     2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 },
     3: { archivo: 'modelos/Sala1/pin_quimbaya_culture.glb', dx: 0 },
-    4: { archivo: 'modelos/Sala3/ave_tairona.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },
-    5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },
-    6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
     7: { archivo: 'modelos/Sala1/collar_separador_quimbaya.glb', dx: 0, alto: 0.14, ancho: 1.1, color: true, emisivo: 0x555555 },
     8: { archivo: 'modelos/Sala1/ear_ornament_quimbaya_culture.glb', dx: 0 },
     9: { archivo: 'modelos/Sala1/gold_incense_burner_quimbaya_culture.glb', dx: 0 },
@@ -18,7 +15,7 @@ const MODELOS_GLB = {
     14: { archivo: 'modelos/Sala1/pin_quimbaya_culture_gallo.glb', dx: 0 },
     
     // --- SALA 2: TUNJOS ---
-    // IMPORTANTE: Verifica que los archivos estén DENTRO de la carpeta "Sala2" en tu proyecto
+    // Asegúrate de que exista una carpeta llamada exactamente "Sala2" con estos archivos.
     15: { archivo: 'modelos/Sala2/01_tunjo_femenino.glb', dx: 0 },
     16: { archivo: 'modelos/Sala2/colgante_con_pajaro.glb', dx: 0 },
     17: { archivo: 'modelos/Sala2/colgante_pajaro.glb', dx: 0 },
@@ -29,17 +26,28 @@ const MODELOS_GLB = {
     22: { archivo: 'modelos/Sala2/figura_masculina_tunjo_2000.glb', dx: 0 },
     23: { archivo: 'modelos/Sala2/seccion_de_diadema.glb', dx: 0 },
     24: { archivo: 'modelos/Sala2/serpiente_tunjo.glb', dx: 0 },
+
+    // --- SALAS 3 Y 4 ---
+    4: { archivo: 'modelos/Sala3/ave_tairona.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },
+    5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },
+    6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
 };
 
-const ALTURA_FLOTANDO = 2.0;
-const ALTO_PIEZA = 0.9;
-const ANCHO_MAX = 1.0;
+// Constantes para el escalado automático de los modelos 3D
+const ALTURA_FLOTANDO = 2.0; // Altura a la que levitan las piezas
+const ALTO_PIEZA = 0.9;      // Altura objetivo dentro de la vitrina
+const ANCHO_MAX = 1.0;       // Ancho máximo para que no atraviesen el vidrio
 
+// Variable global para reutilizar el cargador y no saturar la memoria
 let _loaderGLB = null;
+
 function obtenerLoader() {
     if (_loaderGLB) return _loaderGLB;
     if (typeof THREE === 'undefined' || !THREE.GLTFLoader) return null;
+    
     _loaderGLB = new THREE.GLTFLoader();
+    
+    // Soporte para modelos comprimidos con DRACO (muy común en modelos 3D exportados)
     if (THREE.DRACOLoader) {
         try {
             const draco = new THREE.DRACOLoader();
@@ -58,11 +66,12 @@ window.Pieza = class Pieza {
         this.scene = scene;
         this.centroSala = centroSala || new THREE.Vector3(-32, 0, 0);
         this.colisiones = colisiones || [];
-        this.onCargado = onCargado || null;
+        this.onCargado = onCargado || null; // Callback para saber cuándo terminó de cargar
         this._cargado = false;
         this.boton = null;
-        this.piezaMesh = new THREE.Group();
+        this.piezaMesh = new THREE.Group(); // Grupo contenedor del modelo 3D
 
+        // Calcula el ángulo para que la pieza mire hacia el centro de la sala
         const dx = this.centroSala.x - this.datos.pos.x;
         const dz = this.centroSala.z - this.datos.pos.z;
         this.anguloRotacion = Math.atan2(dx, dz);
@@ -80,18 +89,22 @@ window.Pieza = class Pieza {
 
     crearVitrina() {
         const { x, z } = this.datos.pos;
+        
+        // Base de la vitrina (pedestal)
         const pedestal = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1, 1.5), window.matPedestal);
         pedestal.position.set(x, 0.5, z);
         pedestal.castShadow = false;
         pedestal.receiveShadow = false;
         this.scene.add(pedestal);
 
+        // Vidrio de la vitrina
         const vitrina = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 1.2), window.matVitrina);
         vitrina.position.set(x, 1.9, z);
         vitrina.castShadow = false;
         vitrina.receiveShadow = false;
         this.scene.add(vitrina);
 
+        // Agregamos colisión al pedestal para que el jugador no pueda atravesarlo
         this.colisiones.push({
             minX: x - 0.75, maxX: x + 0.75,
             minZ: z - 0.75, maxZ: z + 0.75,
@@ -109,6 +122,7 @@ window.Pieza = class Pieza {
         if (glb) {
             this.cargarGLB(glb);
         } else {
+            // Si no hay modelo GLB definido, generamos una figura con código
             this.crearProcedural();
             this._notificarCargado();
         }
@@ -117,7 +131,6 @@ window.Pieza = class Pieza {
     cargarGLB(glb) {
         const loader = obtenerLoader();
         if (!loader) {
-            console.warn(`[Pieza ${this.datos.id}] GLTFLoader no disponible; usando respaldo.`);
             this.crearProcedural();
             this._notificarCargado();
             return;
@@ -127,6 +140,7 @@ window.Pieza = class Pieza {
         let resuelto = false;
         const finalizar = () => { if (!resuelto) { resuelto = true; this._notificarCargado(); } };
 
+        // Timeout de seguridad: si el archivo tarda más de 15s en cargar, usa el respaldo
         const timeoutId = setTimeout(() => {
             if (resuelto) return;
             console.warn(`[Pieza ${this.datos.id}] Timeout al cargar ${fuente}; usando respaldo.`);
@@ -142,16 +156,20 @@ window.Pieza = class Pieza {
                     if (resuelto) return;
                     try {
                         const modelo = gltf.scene;
+                        
+                        // Calculamos el tamaño real del modelo para escalarlo automáticamente
                         const caja = new THREE.Box3().setFromObject(modelo);
                         const tam = caja.getSize(new THREE.Vector3());
                         const centro = caja.getCenter(new THREE.Vector3());
 
+                        // Validación para evitar modelos vacíos
                         if (tam.y === 0 || !isFinite(tam.y)) {
                             this.crearProcedural();
                             finalizar();
                             return;
                         }
 
+                        // Escalar para que quepa en la vitrina sin importar su tamaño original
                         const anchoMax = glb.ancho || ANCHO_MAX;
                         const escala = Math.min(
                             (glb.alto || ALTO_PIEZA) / tam.y,
@@ -159,30 +177,44 @@ window.Pieza = class Pieza {
                         );
 
                         modelo.scale.setScalar(escala);
+                        // Centrar el modelo perfectamente en el espacio
                         modelo.position.copy(centro).multiplyScalar(-escala);
                         modelo.position.x += (glb.dx || 0);
 
+                        // Recorremos todas las mallas del modelo para arreglar materiales
                         modelo.traverse((child) => {
                             if (child.isMesh) {
-                                if (glb.color && child.material && child.material.map) {
-                                    const mapa = child.material.map;
-                                    mapa.encoding = THREE.LinearEncoding;
-                                    child.material = new THREE.MeshStandardMaterial({
-                                        map: mapa, metalness: 0.3, roughness: 0.5,
-                                        emissive: (glb.emisivo !== undefined ? glb.emisivo : 0x555555),
-                                        emissiveMap: mapa
-                                    });
+                                // SOLUCIÓN AL APLANADO (SILUETAS): 
+                                // Clonamos el material original y forzamos doble cara.
+                                // Esto hace que se vean bien las piezas planas (como las diademas).
+                                if (child.material) {
+                                    child.material = child.material.clone();
+                                    child.material.side = THREE.DoubleSide;
+                                    
+                                    // SOLUCIÓN A SILUETAS NEGRAS:
+                                    // Si el material es estándar, ajustamos valores para que se vea sin luces complejas.
+                                    if (child.material.isMeshStandardMaterial) {
+                                        child.material.metalness = 0.2; // Evita el negro absoluto (sin reflejos)
+                                        child.material.roughness = 0.5;
+                                        
+                                        // Si el modelo no trae textura, le ponemos un color dorado base
+                                        if (!child.material.map && !glb.color) {
+                                            child.material.color.setHex(0xffcc00);
+                                            child.material.emissive.setHex(0x221100);
+                                        }
+                                    }
                                 } else {
+                                    // Fallback si el modelo no tiene material asignado
                                     child.material = new THREE.MeshStandardMaterial({
-                                        color: 0xffcc00,
-                                        metalness: 0.2,
-                                        roughness: 0.4,
-                                        emissive: 0x553300
+                                        color: 0xffcc00, metalness: 0.2, roughness: 0.5, side: THREE.DoubleSide
                                     });
                                 }
+                                
+                                // Desactivar sombras para mejorar rendimiento y evitar bugs visuales
                                 child.castShadow = false;
                                 child.receiveShadow = false;
-                                child.frustumCulled = false;
+                                // Evita que el modelo desaparezca por errores en el cálculo de la cámara
+                                child.frustumCulled = false; 
                             }
                         });
 
@@ -198,7 +230,9 @@ window.Pieza = class Pieza {
                 undefined,
                 (error) => {
                     clearTimeout(timeoutId);
-                    console.error(`[Pieza ${this.datos.id}] Error 404/CORS al cargar ${fuente}. Revisa la ruta.`, error);
+                    // IMPORTANTE: Si ves este mensaje en la consola (F12), el archivo NO se encontró.
+                    // Revisa que la ruta y las mayúsculas coincidan con tu GitHub.
+                    console.error(`[Pieza ${this.datos.id}] ERROR AL CARGAR: ${fuente}. Verifica la ruta y el CORS.`, error);
                     this.crearProcedural();
                     finalizar();
                 }
@@ -212,6 +246,11 @@ window.Pieza = class Pieza {
     }
 
     crearProcedural() {
+        // ========================================================
+        // FIGURAS DE RESPALDO (Se usan si el .glb falla o no existe)
+        // ========================================================
+        
+        // Respaldo específico para el Poporo Quimbaya (ID 1)
         if (this.datos.id === 1) {
             const curve = new THREE.CatmullRomCurve3([
                 new THREE.Vector3(0, 0.35, 0), new THREE.Vector3(-0.35, 0.1, 0), new THREE.Vector3(-0.4, -0.2, 0),
@@ -225,6 +264,7 @@ window.Pieza = class Pieza {
                 aro.rotation.z = (i - 1) * 0.2;
                 this.piezaMesh.add(aro);
             }
+        // Respaldo específico para el Alfiler Quimbaya (ID 2)
         } else if (this.datos.id === 2) {
             const shapeBase = new THREE.Shape();
             shapeBase.moveTo(-0.5, -0.6); shapeBase.lineTo(0.5, -0.6);
@@ -242,39 +282,35 @@ window.Pieza = class Pieza {
             const alaEspejo = ala.clone();
             alaEspejo.scale.x = -1; alaEspejo.position.set(0.2, 0.2, 0);
             this.piezaMesh.add(alaEspejo);
-            const cuerpo = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.4, 16), window.matOro);
-            cuerpo.position.set(0, 0.1, 0.04);
-            this.piezaMesh.add(cuerpo);
-            const cabeza = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.2, 16), window.matOro);
-            cabeza.position.set(0, 0.35, 0.04);
-            this.piezaMesh.add(cabeza);
+            
+        // Respaldo para la Sala 2 (Tunjos y figuras). 
+        // Usamos el ID para variar las figuras (para que no salgan todas idénticas si falla el .glb).
         } else if (this.datos.id >= 15) {
-            // Respaldo distinto para los Tunjo (Sala 2) en caso de que el GLB falle
-            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.06, 16), window.matOro);
+            // Base del tunjo
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.05, 16), window.matOro);
             base.position.y = -0.4;
             this.piezaMesh.add(base);
 
-            const bodyGeo = this.datos.id % 2 === 0 ? new THREE.CylinderGeometry(0.06, 0.09, 0.5, 8) : new THREE.BoxGeometry(0.12, 0.5, 0.1);
+            // Cuerpo (alterna entre cilindro y caja según el ID)
+            const bodyGeo = this.datos.id % 2 === 0 ? new THREE.CylinderGeometry(0.06, 0.1, 0.5, 8) : new THREE.BoxGeometry(0.15, 0.5, 0.12);
             const body = new THREE.Mesh(bodyGeo, window.matOro);
             body.position.y = -0.1;
             this.piezaMesh.add(body);
 
-            const headGeo = this.datos.id % 3 === 0 ? new THREE.SphereGeometry(0.1, 16, 16) : new THREE.BoxGeometry(0.15, 0.15, 0.15);
+            // Cabeza (alterna entre esfera y caja)
+            const headGeo = this.datos.id % 3 === 0 ? new THREE.SphereGeometry(0.12, 16, 16) : new THREE.BoxGeometry(0.16, 0.16, 0.16);
             const head = new THREE.Mesh(headGeo, window.matOro);
             head.position.y = 0.25;
             this.piezaMesh.add(head);
 
-            const armGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.25, 8);
-            const armL = new THREE.Mesh(armGeo, window.matOro);
-            armL.position.set(-0.12, 0.05, 0);
-            armL.rotation.z = Math.PI / 4;
-            this.piezaMesh.add(armL);
-
-            const armR = new THREE.Mesh(armGeo, window.matOro);
-            armR.position.set(0.12, 0.05, 0);
-            armR.rotation.z = -Math.PI / 4;
-            this.piezaMesh.add(armR);
+            // Detalle extra (gorro) solo para algunos
+            if (this.datos.id % 4 === 0) {
+                const hat = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.2, 8), window.matOro);
+                hat.position.y = 0.4;
+                this.piezaMesh.add(hat);
+            }
         } else {
+            // Respaldo genérico para cualquier otra pieza
             const base = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), window.matOro);
             base.scale.set(1.2, 0.2, 0.4); base.position.y = -0.5;
             this.piezaMesh.add(base);
@@ -284,17 +320,9 @@ window.Pieza = class Pieza {
             const cabeza = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), window.matOro);
             cabeza.position.y = 0.3;
             this.piezaMesh.add(cabeza);
-            const cuerpoFig = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, 0.1), window.matOro);
-            cuerpoFig.position.y = 0.18;
-            this.piezaMesh.add(cuerpoFig);
-            const brazoIzq = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.15, 8), window.matOro);
-            brazoIzq.rotation.z = Math.PI / 3; brazoIzq.position.set(-0.06, 0.2, 0);
-            this.piezaMesh.add(brazoIzq);
-            const brazoDer = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.15, 8), window.matOro);
-            brazoDer.rotation.z = -Math.PI / 3; brazoDer.position.set(0.06, 0.2, 0);
-            this.piezaMesh.add(brazoDer);
         }
 
+        // Asegurarnos de que las figuras de respaldo tampoco proyecten sombras
         this.piezaMesh.traverse((child) => {
             if (child.isMesh) {
                 child.castShadow = false;
@@ -306,10 +334,13 @@ window.Pieza = class Pieza {
     crearBoton() {
         const { x, z } = this.datos.pos;
         this.boton = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.1), window.matBoton);
+        
+        // Colocar el botón mirando hacia el centro de la sala
         const dirAlCentro = this.centroSala.clone().sub(new THREE.Vector3(x, 0, z));
         dirAlCentro.y = 0;
         dirAlCentro.normalize();
         this.boton.position.set(x, 1.2, z).add(dirAlCentro.clone().multiplyScalar(0.9));
+        
         this.boton.rotation.y = this.anguloRotacion;
         this.boton.userData = { pieza: this.datos };
         this.scene.add(this.boton);
