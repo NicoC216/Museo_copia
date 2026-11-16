@@ -18,6 +18,7 @@ const MODELOS_GLB = {
     14: { archivo: 'modelos/Sala1/pin_quimbaya_culture_gallo.glb', dx: 0 },
     
     // --- SALA 2: TUNJOS ---
+    // IMPORTANTE: Verifica que los archivos estén DENTRO de la carpeta "Sala2" en tu proyecto
     15: { archivo: 'modelos/Sala2/01_tunjo_femenino.glb', dx: 0 },
     16: { archivo: 'modelos/Sala2/colgante_con_pajaro.glb', dx: 0 },
     17: { archivo: 'modelos/Sala2/colgante_pajaro.glb', dx: 0 },
@@ -197,7 +198,7 @@ window.Pieza = class Pieza {
                 undefined,
                 (error) => {
                     clearTimeout(timeoutId);
-                    console.error(`[Pieza ${this.datos.id}] Error 404/CORS al cargar ${fuente}:`, error);
+                    console.error(`[Pieza ${this.datos.id}] Error 404/CORS al cargar ${fuente}. Revisa la ruta.`, error);
                     this.crearProcedural();
                     finalizar();
                 }
@@ -247,6 +248,32 @@ window.Pieza = class Pieza {
             const cabeza = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.2, 16), window.matOro);
             cabeza.position.set(0, 0.35, 0.04);
             this.piezaMesh.add(cabeza);
+        } else if (this.datos.id >= 15) {
+            // Respaldo distinto para los Tunjo (Sala 2) en caso de que el GLB falle
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.06, 16), window.matOro);
+            base.position.y = -0.4;
+            this.piezaMesh.add(base);
+
+            const bodyGeo = this.datos.id % 2 === 0 ? new THREE.CylinderGeometry(0.06, 0.09, 0.5, 8) : new THREE.BoxGeometry(0.12, 0.5, 0.1);
+            const body = new THREE.Mesh(bodyGeo, window.matOro);
+            body.position.y = -0.1;
+            this.piezaMesh.add(body);
+
+            const headGeo = this.datos.id % 3 === 0 ? new THREE.SphereGeometry(0.1, 16, 16) : new THREE.BoxGeometry(0.15, 0.15, 0.15);
+            const head = new THREE.Mesh(headGeo, window.matOro);
+            head.position.y = 0.25;
+            this.piezaMesh.add(head);
+
+            const armGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.25, 8);
+            const armL = new THREE.Mesh(armGeo, window.matOro);
+            armL.position.set(-0.12, 0.05, 0);
+            armL.rotation.z = Math.PI / 4;
+            this.piezaMesh.add(armL);
+
+            const armR = new THREE.Mesh(armGeo, window.matOro);
+            armR.position.set(0.12, 0.05, 0);
+            armR.rotation.z = -Math.PI / 4;
+            this.piezaMesh.add(armR);
         } else {
             const base = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), window.matOro);
             base.scale.set(1.2, 0.2, 0.4); base.position.y = -0.5;

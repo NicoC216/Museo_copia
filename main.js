@@ -143,7 +143,7 @@ const PIEZAS_DATA = [
         modelo: "pendant_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
 
-    // --- SALA 2: TUNJOS (Centro: -32, 0, 0) ---
+    // --- SALA 2: TUNJOS ---
     {
         id: 15, nombre: "Tunjo Femenino", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
         descripcion: "Figura femenina en oro. Ficha por completar.",
