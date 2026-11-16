@@ -1,3 +1,6 @@
+// ============================================================
+// Pieza.js
+// ============================================================
 const MODELOS_GLB = {
     1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },
     2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 },
@@ -13,6 +16,18 @@ const MODELOS_GLB = {
     12: { archivo: 'modelos/Sala1/pendant_quimbaya_culture.glb', dx: 0 },
     13: { archivo: 'modelos/Sala1/pendant_quimbaya_culture_tres.glb', dx: 0 },
     14: { archivo: 'modelos/Sala1/pin_quimbaya_culture_gallo.glb', dx: 0 },
+    
+    // --- SALA 2: TUNJOS ---
+    15: { archivo: 'modelos/Sala2/01_tunjo_femenino.glb', dx: 0 },
+    16: { archivo: 'modelos/Sala2/colgante_con_pajaro.glb', dx: 0 },
+    17: { archivo: 'modelos/Sala2/colgante_pajaro.glb', dx: 0 },
+    18: { archivo: 'modelos/Sala2/figura_femenina_tunjo.glb', dx: 0 },
+    19: { archivo: 'modelos/Sala2/figura_masculina_taburete.glb', dx: 0 },
+    20: { archivo: 'modelos/Sala2/figura_masculina_tunjo.glb', dx: 0 },
+    21: { archivo: 'modelos/Sala2/figura_masculina_tunjo_1991.glb', dx: 0 },
+    22: { archivo: 'modelos/Sala2/figura_masculina_tunjo_2000.glb', dx: 0 },
+    23: { archivo: 'modelos/Sala2/seccion_de_diadema.glb', dx: 0 },
+    24: { archivo: 'modelos/Sala2/serpiente_tunjo.glb', dx: 0 },
 };
 
 const ALTURA_FLOTANDO = 2.0;
@@ -157,17 +172,16 @@ window.Pieza = class Pieza {
                                         emissiveMap: mapa
                                     });
                                 } else {
-                                    // Ajuste clave: bajar el metalness para que no se vean negros sin envMap
                                     child.material = new THREE.MeshStandardMaterial({
-                                        color: 0xffcc00, // Dorado más brillante
-                                        metalness: 0.2,  // Reducido drásticamente
+                                        color: 0xffcc00,
+                                        metalness: 0.2,
                                         roughness: 0.4,
-                                        emissive: 0x553300 // Leve iluminación propia
+                                        emissive: 0x553300
                                     });
                                 }
                                 child.castShadow = false;
                                 child.receiveShadow = false;
-                                child.frustumCulled = false; // Previene que desaparezcan por error de cámara
+                                child.frustumCulled = false;
                             }
                         });
 

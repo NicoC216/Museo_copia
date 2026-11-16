@@ -1,3 +1,6 @@
+// ============================================================
+// main.js
+// ============================================================
 const canvas = document.getElementById('c');
 if (typeof THREE === 'undefined') {
     document.body.innerHTML = '<p style="color:white;text-align:center;padding:2rem;font-family:Georgia,serif;">Error: no se pudo cargar three.js. Revisa tu conexión a internet.</p>';
@@ -65,7 +68,6 @@ scene.fog = new THREE.Fog(0x0a0a0a, 40, 100);
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.rotation.order = 'YXZ';
 
-// Luces ajustadas para que los metales brillen sin ser negros
 scene.add(new THREE.AmbientLight(0xffffff, 0.8)); 
 scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.7));
 const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.0);
@@ -139,6 +141,58 @@ const PIEZAS_DATA = [
         id: 12, nombre: "Pendant Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Colgante Quimbaya. Ficha por completar.",
         modelo: "pendant_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+
+    // --- SALA 2: TUNJOS (Centro: -32, 0, 0) ---
+    {
+        id: 15, nombre: "Tunjo Femenino", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Figura femenina en oro. Ficha por completar.",
+        modelo: "01_tunjo_femenino", pos: new THREE.Vector3(-38, 0, -9), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 16, nombre: "Colgante con Pájaro", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Colgante con figura de ave. Ficha por completar.",
+        modelo: "colgante_con_pajaro", pos: new THREE.Vector3(-38, 0, -3), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 17, nombre: "Colgante Pájaro", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Colgante de ave. Ficha por completar.",
+        modelo: "colgante_pajaro", pos: new THREE.Vector3(-38, 0, 3), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 18, nombre: "Figura Femenina Tunjo", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Tunjo femenino. Ficha por completar.",
+        modelo: "figura_femenina_tunjo", pos: new THREE.Vector3(-38, 0, 9), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 19, nombre: "Figura Masculina en Taburete", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Tunjo masculino sentado en taburete. Ficha por completar.",
+        modelo: "figura_masculina_taburete", pos: new THREE.Vector3(-34, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 20, nombre: "Figura Masculina Tunjo", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Tunjo masculino. Ficha por completar.",
+        modelo: "figura_masculina_tunjo", pos: new THREE.Vector3(-32, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 21, nombre: "Figura Masculina Tunjo (1991)", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Tunjo masculino variante 1991. Ficha por completar.",
+        modelo: "figura_masculina_tunjo_1991", pos: new THREE.Vector3(-30, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 22, nombre: "Figura Masculina Tunjo (2000)", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Tunjo masculino variante 2000. Ficha por completar.",
+        modelo: "figura_masculina_tunjo_2000", pos: new THREE.Vector3(-34, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 23, nombre: "Sección de Diadema", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Fragmento de diadema en oro. Ficha por completar.",
+        modelo: "seccion_de_diadema", pos: new THREE.Vector3(-32, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 24, nombre: "Serpiente Tunjo", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
+        descripcion: "Figura de serpiente en oro. Ficha por completar.",
+        modelo: "serpiente_tunjo", pos: new THREE.Vector3(-30, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
 
     // --- SALA 3: LOS TAIRONA ---
