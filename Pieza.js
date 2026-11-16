@@ -1,15 +1,17 @@
-// Archivos .glb por id de pieza y su clave para el modo sin servidor (modelos_b64.js).
+// Archivos .glb por id de pieza con sus rutas relativas a las carpetas de sala.
 // Si un .glb no carga (o el loader falla), se usa el modelo de respaldo hecho con código.
 const MODELOS_GLB = {
     // dx = desplazamiento lateral dentro de la vitrina (negativo = izquierda, positivo = derecha, visto de frente)
     // ancho = (opcional) ancho máximo de ESTA pieza; si no se pone, se usa ANCHO_MAX
-    1: { clave: 'poporo',   archivo: 'modelos/poporo_dorado.glb',   dx: 0 },  // Poporo Quimbaya
-    4: { clave: 'ave',      archivo: 'modelos/ave_tairona.glb',     dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },  // pectoral de ave tairona: modelo con la textura de la foto (sube/baja "emisivo" para más/menos brillo)
-    5: { clave: 'pectoral', archivo: 'modelos/pectoral_dorado.glb', dx: 0 },  // pinzas tairona (el archivo se llama "pectoral_dorado.glb")
-    6: { clave: 'nariguera', archivo: 'modelos/nariguera_dorada.glb', dx: 0 },  // ornamento nasal (generado con generar_nariguera.py)
-    7: { clave: 'collar_separador_quimbaya', archivo: 'modelos/collar_separador_quimbaya.glb', dx: 0, alto: 0.14, ancho: 1.1, color: true, emisivo: 0x555555 },  // collar separador (barra de 11 cuentas, muy ancha y baja: manda el ancho)
-
+    1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },  // Poporo Quimbaya
+    2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 }, // Alfiler Quimbaya
+    3: { archivo: 'modelos/Sala1/pin_quimbaya_culture (1).glb', dx: 0 }, // Broche / Alfiler Quimbaya
+    4: { archivo: 'modelos/Sala3/ave_tairona.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },  // Pectoral de ave tairona
+    5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },  // Pectoral Dorado
+    6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },  // Ornamento nasal (ajusta la ruta si está en otra carpeta)
+    7: { archivo: 'modelos/Sala1/collar_separador_quimbaya.glb', dx: 0, alto: 0.14, ancho: 1.1, color: true, emisivo: 0x555555 },  // Collar separador
 };
+
 const ALTURA_FLOTANDO = 2.0; // altura del CENTRO de la pieza (el pedestal llega a 1.0 y la vitrina va de 1.0 a 2.8). Sube o baja este número a gusto.
 const ALTO_PIEZA = 0.9; // alto final de la pieza dentro de la vitrina (la vitrina mide 1.8)
 const ANCHO_MAX = 1.0;  // ancho máximo permitido (la vitrina mide 1.2 de ancho); las piezas anchas se reducen para caber
@@ -68,8 +70,8 @@ window.Pieza = class Pieza {
             return;
         }
 
-        // Si existe window.MODELOS_B64 (modelos_b64.js) se usa eso; si no, se carga el archivo .glb
-        const fuente = (window.MODELOS_B64 && window.MODELOS_B64[glb.clave]) || glb.archivo;
+        // Cargamos directamente el archivo .glb usando su ruta
+        const fuente = glb.archivo;
 
         try {
             new THREE.GLTFLoader().load(
@@ -111,7 +113,7 @@ window.Pieza = class Pieza {
                 },
                 undefined,
                 (error) => {
-                    console.error('No se pudo cargar el modelo', fuente.slice(0, 60), error);
+                    console.error('No se pudo cargar el modelo:', fuente, error);
                     this.crearProcedural();
                 }
             );
