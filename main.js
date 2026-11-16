@@ -7,13 +7,11 @@ if (typeof THREE === 'undefined') {
     throw new Error('THREE no cargado');
 }
 
-// Inicialización del renderizador con High Performance para priorizar la tarjeta gráfica
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
 
 // ==========================================
 // DETECCIÓN DE GPU Y CALIDAD ADAPTATIVA
 // ==========================================
-// Detectamos si el navegador está usando renderizado por software (sin tarjeta gráfica)
 let nombreGPU = 'desconocida';
 (function () {
     const gl = renderer.getContext();
@@ -21,7 +19,7 @@ let nombreGPU = 'desconocida';
     if (ext) nombreGPU = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
     console.log('GPU en uso:', nombreGPU);
 })();
-// Expresión regular para detectar renderizadores lentos por software
+
 const SIN_GPU = /basic render|swiftshader|llvmpipe|software/i.test(nombreGPU);
 
 if (SIN_GPU) {
@@ -35,7 +33,6 @@ if (SIN_GPU) {
     document.body.appendChild(aviso);
 }
 
-// Sistema de calidad adaptativa: si los FPS bajan, baja la resolución interna del canvas
 const ESCALA_MAX = SIN_GPU ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.5);
 const ESCALA_MIN = 0.4;
 let escala = ESCALA_MAX;
@@ -49,14 +46,10 @@ function aplicarEscala() {
 function monitorear(delta) {
     if (delta > 0.5) { acumTiempo = 0; acumFrames = 0; return; }
     acumTiempo += delta; acumFrames++;
-    if (acumTiempo < 2) return; // Evalúa el rendimiento cada 2 segundos
-    
+    if (acumTiempo < 2) return;
     const fps = acumFrames / acumTiempo;
     acumTiempo = 0; acumFrames = 0;
-    
     if (intervalosOmitidos > 0) { intervalosOmitidos--; return; }
-    
-    // Si va a menos de 40 FPS, baja la escala. Si va a más de 58, la sube.
     if (fps < 40 && escala > ESCALA_MIN) {
         escala = Math.max(ESCALA_MIN, escala * 0.85);
         aplicarEscala();
@@ -68,8 +61,6 @@ function monitorear(delta) {
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(escala);
-
-// Configuración de sombras (desactivadas en modo software para evitar lag extremo)
 renderer.shadowMap.enabled = !SIN_GPU;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.shadowMap.autoUpdate = false; // OPTIMIZACIÓN: No recalcular sombras cada frame
@@ -79,23 +70,21 @@ renderer.shadowMap.autoUpdate = false; // OPTIMIZACIÓN: No recalcular sombras c
 // ==========================================
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0a0a);
-scene.fog = new THREE.Fog(0x0a0a0a, 40, 100); // Niebla para dar profundidad en los pasillos
+scene.fog = new THREE.Fog(0x0a0a0a, 40, 100);
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.rotation.order = 'YXZ'; // Crucial para que el ratón no gire la cámara de forma extraña
+camera.rotation.order = 'YXZ';
 
 // ==========================================
 // ILUMINACIÓN GLOBAL
 // ==========================================
-// Subimos un poco la luz ambiental y hemisférica para evitar que los metales se vean negros.
 scene.add(new THREE.AmbientLight(0xffffff, 0.8)); 
 scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.7));
-
 const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.0);
 dirLight.position.set(20, 40, 20);
 dirLight.castShadow = !SIN_GPU;
 if (dirLight.shadow) {
-    dirLight.shadow.mapSize.width = 512; // Resolución de sombra optimizada
+    dirLight.shadow.mapSize.width = 512;
     dirLight.shadow.mapSize.height = 512;
     dirLight.shadow.camera.left = -50;
     dirLight.shadow.camera.right = 50;
@@ -104,14 +93,14 @@ if (dirLight.shadow) {
 }
 scene.add(dirLight);
 
-// Llamada a la creación del museo (Entorno.js), devuelve un array con las cajas de colisión
 const colisiones = window.crearMuseo(scene);
 
 // ==========================================
-// DATOS DE LAS PIEZAS (Posiciones y textos)
+// DATOS DE LAS PIEZAS
 // ==========================================
 const PIEZAS_DATA = [
     // --- SALA 1: EL TESORO QUIMBAYA (Centro: -32, 0, 26) ---
+    // Exactamente 10 piezas.
     {
         id: 1, nombre: "Poporo Quimbaya", cultura: "Quimbaya, siglos I–VI d. C.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
         descripcion: "El poporo guardaba cal en polvo que se mezclaba con hojas de coca en un uso ritual andino. Esta botella con hombros lleva una figura femenina a cada lado y, según el Met, aún conserva cal en su interior. N.º 1991.419.22.",
@@ -122,8 +111,8 @@ const PIEZAS_DATA = [
         descripcion: "Alfiler de tumbaga hecho con fundición a la cera perdida, pulido y soldadura. N.º 17448.",
         modelo: "pin_quimbaya_color", pos: new THREE.Vector3(-38, 0, 22), centroSala: new THREE.Vector3(-32, 0, 26)
     },
-    // NOTA: Se eliminó el id: 3 (pin_quimbaya_culture) porque era una copia visual del id: 2. 
-    // Ahora la Sala 1 muestra exactamente las 10 piezas únicas.
+    // NOTA: El ID 3 (pin_quimbaya_culture) fue eliminado de aquí. 
+    // Ahora solo hay 10 vitrinas en esta sala.
     {
         id: 14, nombre: "Pin Quimbaya Gallo", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Alfiler gallo Quimbaya. Ficha por completar.",
@@ -237,12 +226,15 @@ const PIEZAS_DATA = [
     }
 ];
 
-// Arreglo global de los botones (para que el jugador pueda hacerles raycast)
 const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
+
+// LOG DE CONTROL: Esto imprimirá en la consola cuántas piezas se van a renderizar en total.
+// Sala 1 (10) + Sala 2 (10) + Sala 3 (2) + Sala 4 (1) = 23 piezas en total.
+console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
+
 let piezasCargadas = 0;
 
-// Interfaz visual de "Cargando..." para dar feedback al usuario
 const divCargando = document.getElementById('cargando');
 function actualizarCarga() {
     if (!divCargando) return;
@@ -256,7 +248,6 @@ function actualizarCarga() {
 }
 actualizarCarga();
 
-// Instanciamos cada pieza y le pasamos un callback para saber cuándo termina
 PIEZAS_DATA.forEach((datos) => {
     const p = new window.Pieza(datos, scene, datos.centroSala, colisiones, () => {
         piezasCargadas++;
@@ -265,11 +256,9 @@ PIEZAS_DATA.forEach((datos) => {
     botones.push(p.boton);
 });
 
-// Inicializamos la UI (panel de información) y al Jugador
 window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
-// Pre-compilar shaders para evitar tirones en el primer frame
 try { renderer.compile(scene, camera); } catch (e) {}
 
 // ==========================================
@@ -329,7 +318,6 @@ document.getElementById('btnEntrar').addEventListener('click', () => {
     document.getElementById('salir').style.display = 'block';
     document.getElementById('hud').style.display = 'block';
     document.getElementById('cross').style.display = 'block';
-    // Posicionar al jugador al inicio
     jugador.pos.set(0, window.OJO_Y, 35);
     jugador.yaw = 0; jugador.pitch = 0;
     jugador.enJuego = true;
@@ -341,7 +329,6 @@ document.getElementById('pausaContinuar').addEventListener('click', cerrarPausa)
 document.getElementById('pausaCerrar').addEventListener('click', cerrarPausa);
 document.getElementById('pausaSalir').addEventListener('click', salirAlIntro);
 
-// Atajo de teclado para pausar (P)
 window.addEventListener('keydown', (e) => {
     if (e.code !== 'KeyP') return;
     const intro = document.getElementById('intro');
@@ -351,7 +338,6 @@ window.addEventListener('keydown', (e) => {
     else abrirPausa();
 });
 
-// Manejo del PointerLockChange (cuando el jugador presiona Esc)
 document.addEventListener('pointerlockchange', () => {
     const locked = document.pointerLockElement === document.body;
     if (locked) { pointerEstuvoBloqueado = true; return; }
@@ -378,13 +364,10 @@ const reloj = new THREE.Clock();
 
 function animar() {
     requestAnimationFrame(animar);
-    
-    // Delta time asegura que la velocidad sea igual sin importar los FPS
     const delta = reloj.getDelta();
     const dt = Math.min(delta, 0.1); 
     monitorear(delta);
 
-    // Lógica para re-bloquear el puntero al cerrar el panel de información
     const piVisible = panelInfoVisible();
     if (estabaMostrandoInfo && !piVisible && !pausado && !jugador.enJuego) {
         const intro = document.getElementById('intro');
@@ -396,7 +379,6 @@ function animar() {
     }
     estabaMostrandoInfo = piVisible;
 
-    // Animación de los objetos flotantes del centro (Lobby)
     if (window.objetosFlotantes && window.objetosFlotantes.length) {
         const time = reloj.getElapsedTime();
         const lista = window.objetosFlotantes;
@@ -408,19 +390,14 @@ function animar() {
         }
     }
 
-    // Actualizar lógica del jugador (movimiento y colisiones)
     jugador.actualizar(dt);
-    
-    // Renderizar la escena
     renderer.render(scene, camera);
 }
 
-// Ajustar cámara si el usuario redimensiona la ventana
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Iniciar el bucle de renderizado
 animar();

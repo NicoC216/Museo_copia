@@ -4,7 +4,7 @@ const MODELOS_GLB = {
     // --- SALA 1: QUIMBAYA ---
     1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },
     2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 },
-    3: { archivo: 'modelos/Sala1/pin_quimbaya_culture.glb', dx: 0 },
+    // 3: { archivo: 'modelos/Sala1/pin_quimbaya_culture.glb', dx: 0 }, // ELIMINADO DEFINITIVAMENTE: Era idéntico al 2
     7: { archivo: 'modelos/Sala1/collar_separador_quimbaya.glb', dx: 0, alto: 0.14, ancho: 1.1, color: true, emisivo: 0x555555 },
     8: { archivo: 'modelos/Sala1/ear_ornament_quimbaya_culture.glb', dx: 0 },
     9: { archivo: 'modelos/Sala1/gold_incense_burner_quimbaya_culture.glb', dx: 0 },
@@ -231,7 +231,6 @@ window.Pieza = class Pieza {
                 (error) => {
                     clearTimeout(timeoutId);
                     // IMPORTANTE: Si ves este mensaje en la consola (F12), el archivo NO se encontró.
-                    // Revisa que la ruta y las mayúsculas coincidan con tu GitHub.
                     console.error(`[Pieza ${this.datos.id}] ERROR AL CARGAR: ${fuente}. Verifica la ruta y el CORS.`, error);
                     this.crearProcedural();
                     finalizar();
