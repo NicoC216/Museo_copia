@@ -1,13 +1,19 @@
+// ==========================================
+// INICIALIZACIÓN DEL CANVAS Y VERIFICACIÓN
+// ==========================================
 const canvas = document.getElementById('c');
 if (typeof THREE === 'undefined') {
     document.body.innerHTML = '<p style="color:white;text-align:center;padding:2rem;font-family:Georgia,serif;">Error: no se pudo cargar three.js. Revisa tu conexión a internet.</p>';
     throw new Error('THREE no cargado');
 }
 
-// Inicialización del renderizador con High Performance
+// Inicialización del renderizador con High Performance para priorizar la tarjeta gráfica
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
 
-// Detección de GPU para optimizar el rendimiento automáticamente
+// ==========================================
+// DETECCIÓN DE GPU Y CALIDAD ADAPTATIVA
+// ==========================================
+// Detectamos si el navegador está usando renderizado por software (sin tarjeta gráfica)
 let nombreGPU = 'desconocida';
 (function () {
     const gl = renderer.getContext();
@@ -15,7 +21,7 @@ let nombreGPU = 'desconocida';
     if (ext) nombreGPU = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
     console.log('GPU en uso:', nombreGPU);
 })();
-// Si el navegador está renderizando por software (sin tarjeta gráfica), avisamos y bajamos la calidad.
+// Expresión regular para detectar renderizadores lentos por software
 const SIN_GPU = /basic render|swiftshader|llvmpipe|software/i.test(nombreGPU);
 
 if (SIN_GPU) {
@@ -29,7 +35,7 @@ if (SIN_GPU) {
     document.body.appendChild(aviso);
 }
 
-// Lógica de calidad adaptativa: si los FPS bajan, baja la resolución del canvas internamente
+// Sistema de calidad adaptativa: si los FPS bajan, baja la resolución interna del canvas
 const ESCALA_MAX = SIN_GPU ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.5);
 const ESCALA_MIN = 0.4;
 let escala = ESCALA_MAX;
@@ -43,18 +49,19 @@ function aplicarEscala() {
 function monitorear(delta) {
     if (delta > 0.5) { acumTiempo = 0; acumFrames = 0; return; }
     acumTiempo += delta; acumFrames++;
-    if (acumTiempo < 2) return; // Evalúa cada 2 segundos
+    if (acumTiempo < 2) return; // Evalúa el rendimiento cada 2 segundos
     
     const fps = acumFrames / acumTiempo;
     acumTiempo = 0; acumFrames = 0;
     
     if (intervalosOmitidos > 0) { intervalosOmitidos--; return; }
     
+    // Si va a menos de 40 FPS, baja la escala. Si va a más de 58, la sube.
     if (fps < 40 && escala > ESCALA_MIN) {
-        escala = Math.max(ESCALA_MIN, escala * 0.85); // Baja calidad
+        escala = Math.max(ESCALA_MIN, escala * 0.85);
         aplicarEscala();
     } else if (fps > 58 && escala < ESCALA_MAX) {
-        escala = Math.min(ESCALA_MAX, escala * 1.05); // Sube calidad
+        escala = Math.min(ESCALA_MAX, escala * 1.05);
         aplicarEscala();
     }
 }
@@ -62,10 +69,10 @@ function monitorear(delta) {
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(escala);
 
-// Configuración de sombras (desactivadas si no hay GPU o para ahorrar recursos)
+// Configuración de sombras (desactivadas en modo software para evitar lag extremo)
 renderer.shadowMap.enabled = !SIN_GPU;
 renderer.shadowMap.type = THREE.PCFShadowMap;
-renderer.shadowMap.autoUpdate = false; // No recalcular sombras cada frame
+renderer.shadowMap.autoUpdate = false; // OPTIMIZACIÓN: No recalcular sombras cada frame
 
 // ==========================================
 // ESCENA Y CÁMARA
@@ -75,7 +82,7 @@ scene.background = new THREE.Color(0x0a0a0a);
 scene.fog = new THREE.Fog(0x0a0a0a, 40, 100); // Niebla para dar profundidad en los pasillos
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.rotation.order = 'YXZ'; // Orden crucial para que el ratón no gire la cámara de forma extraña
+camera.rotation.order = 'YXZ'; // Crucial para que el ratón no gire la cámara de forma extraña
 
 // ==========================================
 // ILUMINACIÓN GLOBAL
@@ -97,7 +104,7 @@ if (dirLight.shadow) {
 }
 scene.add(dirLight);
 
-// Llamada a la creación del museo, devuelve un array con las cajas de colisión
+// Llamada a la creación del museo (Entorno.js), devuelve un array con las cajas de colisión
 const colisiones = window.crearMuseo(scene);
 
 // ==========================================
@@ -115,35 +122,32 @@ const PIEZAS_DATA = [
         descripcion: "Alfiler de tumbaga hecho con fundición a la cera perdida, pulido y soldadura. N.º 17448.",
         modelo: "pin_quimbaya_color", pos: new THREE.Vector3(-38, 0, 22), centroSala: new THREE.Vector3(-32, 0, 26)
     },
-    {
-        id: 3, nombre: "Broche / Alfiler Quimbaya", cultura: "Quimbaya, siglos IV-V d. C.", museo: "Museo de América, Madrid", pais: "España",
-        descripcion: "Broche de tumbaga hecho con cera perdida, pulido y soldadura. N.º 17461.",
-        modelo: "pin_quimbaya_culture", pos: new THREE.Vector3(-38, 0, 30), centroSala: new THREE.Vector3(-32, 0, 26)
-    },
+    // NOTA: Se eliminó el id: 3 (pin_quimbaya_culture) porque era una copia visual del id: 2. 
+    // Ahora la Sala 1 muestra exactamente las 10 piezas únicas.
     {
         id: 14, nombre: "Pin Quimbaya Gallo", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Alfiler gallo Quimbaya. Ficha por completar.",
-        modelo: "pin_quimbaya_culture_gallo", pos: new THREE.Vector3(-38, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
+        modelo: "pin_quimbaya_culture_gallo", pos: new THREE.Vector3(-38, 0, 30), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 8, nombre: "Ear Ornament Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Ornamento de oreja Quimbaya. Ficha por completar.",
-        modelo: "ear_ornament_quimbaya_culture", pos: new THREE.Vector3(-35, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+        modelo: "ear_ornament_quimbaya_culture", pos: new THREE.Vector3(-38, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 9, nombre: "Gold Incense Burner", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Incensario de oro Quimbaya. Ficha por completar.",
-        modelo: "gold_incense_burner_quimbaya_culture", pos: new THREE.Vector3(-32, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+        modelo: "gold_incense_burner_quimbaya_culture", pos: new THREE.Vector3(-35, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 10, nombre: "Helmet Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Casco Quimbaya. Ficha por completar.",
-        modelo: "helmet_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+        modelo: "helmet_quimbaya_culture", pos: new THREE.Vector3(-32, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 11, nombre: "Necklace Piece Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
         descripcion: "Pieza de collar Quimbaya. Ficha por completar.",
-        modelo: "necklace_piece_quimbaya_culture", pos: new THREE.Vector3(-26, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+        modelo: "necklace_piece_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 7, nombre: "Collar separador Quimbaya", cultura: "Quimbaya (fecha: por completar)", museo: "Museo de América, Madrid", pais: "España",
@@ -238,7 +242,7 @@ const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
 let piezasCargadas = 0;
 
-// Interfaz visual de "Cargando..." (opcional, para dar feedback al usuario)
+// Interfaz visual de "Cargando..." para dar feedback al usuario
 const divCargando = document.getElementById('cargando');
 function actualizarCarga() {
     if (!divCargando) return;
@@ -261,10 +265,8 @@ PIEZAS_DATA.forEach((datos) => {
     botones.push(p.boton);
 });
 
-// Inicializamos la UI (panel de información)
+// Inicializamos la UI (panel de información) y al Jugador
 window.inicializarUI();
-
-// Instanciamos al jugador
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
 // Pre-compilar shaders para evitar tirones en el primer frame
@@ -406,10 +408,10 @@ function animar() {
         }
     }
 
-    // Actualizar lógica del jugador
+    // Actualizar lógica del jugador (movimiento y colisiones)
     jugador.actualizar(dt);
     
-    // Renderizar escena
+    // Renderizar la escena
     renderer.render(scene, camera);
 }
 
@@ -420,5 +422,5 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Iniciar el bucle
+// Iniciar el bucle de renderizado
 animar();
