@@ -1,30 +1,53 @@
-// Archivos .glb por id de pieza con sus rutas relativas a las carpetas de sala.
+// ============================================================
+// Pieza.js
+// ============================================================
 const MODELOS_GLB = {
     1: { archivo: 'modelos/Sala1/poporo_dorado.glb', dx: 0 },
     2: { archivo: 'modelos/Sala1/pin_quimbaya_color.glb', dx: 0 },
-    3: { archivo: 'modelos/Sala1/pin_quimbaya_culture.glb', dx: 0 }, 
+    3: { archivo: 'modelos/Sala1/pin_quimbaya_culture.glb', dx: 0 },
     4: { archivo: 'modelos/Sala3/ave_tairona.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },
     5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
     7: { archivo: 'modelos/Sala1/collar_separador_quimbaya.glb', dx: 0, alto: 0.14, ancho: 1.1, color: true, emisivo: 0x555555 },
     8: { archivo: 'modelos/Sala1/ear_ornament_quimbaya_culture.glb', dx: 0 },
     9: { archivo: 'modelos/Sala1/gold_incense_burner_quimbaya_culture.glb', dx: 0 },
-    10: { archivo: 'modelos/Sala1/helmet_quimbaya_culture.glb', dx: 0 }, 
+    10: { archivo: 'modelos/Sala1/helmet_quimbaya_culture.glb', dx: 0 },
     11: { archivo: 'modelos/Sala1/necklace_piece_quimbaya_culture.glb', dx: 0 },
-    12: { archivo: 'modelos/Sala1/pendant_quimbaya_culture.glb', dx: 0 }, 
+    12: { archivo: 'modelos/Sala1/pendant_quimbaya_culture.glb', dx: 0 },
     13: { archivo: 'modelos/Sala1/pendant_quimbaya_culture_tres.glb', dx: 0 },
     14: { archivo: 'modelos/Sala1/pin_quimbaya_culture_gallo.glb', dx: 0 },
 };
 
-const ALTURA_FLOTANDO = 2.0; 
-const ALTO_PIEZA = 0.9; 
-const ANCHO_MAX = 1.0;  
+const ALTURA_FLOTANDO = 2.0;
+const ALTO_PIEZA = 0.9;
+const ANCHO_MAX = 1.0;
+
+// Loader compartido con soporte DRACO
+let _loaderGLB = null;
+function obtenerLoader() {
+    if (_loaderGLB) return _loaderGLB;
+    if (typeof THREE === 'undefined' || !THREE.GLTFLoader) return null;
+    _loaderGLB = new THREE.GLTFLoader();
+    if (THREE.DRACOLoader) {
+        try {
+            const draco = new THREE.DRACOLoader();
+            draco.setDecoderPath('https://unpkg.com/three@0.128.0/examples/js/libs/draco/gltf/');
+            _loaderGLB.setDRACOLoader(draco);
+        } catch (e) {
+            console.warn('DRACOLoader no disponible', e);
+        }
+    }
+    return _loaderGLB;
+}
 
 window.Pieza = class Pieza {
-    constructor(datos, scene, centroSala) {
+    constructor(datos, scene, centroSala, colisiones, onCargado) {
         this.datos = datos;
         this.scene = scene;
-        this.centroSala = centroSala || new THREE.Vector3(-32, 0, 0); 
+        this.centroSala = centroSala || new THREE.Vector3(-32, 0, 0);
+        this.colisiones = colisiones || [];
+        this.onCargado = onCargado || null;
+        this._cargado = false;
         this.boton = null;
         this.piezaMesh = new THREE.Group();
 
@@ -37,22 +60,37 @@ window.Pieza = class Pieza {
         this.crearBoton();
     }
 
+    _notificarCargado() {
+        if (this._cargado) return;
+        this._cargado = true;
+        if (this.onCargado) this.onCargado();
+    }
+
     crearVitrina() {
-        const { x, y, z } = this.datos.pos;
+        const { x, z } = this.datos.pos;
         const pedestal = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1, 1.5), window.matPedestal);
         pedestal.position.set(x, 0.5, z);
-        pedestal.castShadow = false; // OPTIMIZACIÓN: Sombras desactivadas
-        pedestal.receiveShadow = true;
+        pedestal.castShadow = false;
+        pedestal.receiveShadow = false;
         this.scene.add(pedestal);
 
         const vitrina = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 1.2), window.matVitrina);
         vitrina.position.set(x, 1.9, z);
+        vitrina.castShadow = false;
+        vitrina.receiveShadow = false;
         this.scene.add(vitrina);
+
+        // Colisión del pedestal para que no se pueda atravesar
+        this.colisiones.push({
+            minX: x - 0.75, maxX: x + 0.75,
+            minZ: z - 0.75, maxZ: z + 0.75,
+            minY: 0, maxY: 3
+        });
     }
 
     crearModelo3D() {
         const { x, z } = this.datos.pos;
-        this.piezaMesh.position.set(x, 2.2, z);
+        this.piezaMesh.position.set(x, ALTURA_FLOTANDO, z);
         this.piezaMesh.rotation.y = this.anguloRotacion;
         this.scene.add(this.piezaMesh);
 
@@ -61,67 +99,105 @@ window.Pieza = class Pieza {
             this.cargarGLB(glb);
         } else {
             this.crearProcedural();
+            this._notificarCargado();
         }
     }
 
     cargarGLB(glb) {
-        if (typeof THREE.GLTFLoader === 'undefined') {
+        const loader = obtenerLoader();
+        if (!loader) {
+            console.warn(`[Pieza ${this.datos.id}] GLTFLoader no disponible; usando respaldo.`);
             this.crearProcedural();
+            this._notificarCargado();
             return;
         }
 
         const fuente = glb.archivo;
+        let resuelto = false;
+        const finalizar = () => { if (!resuelto) { resuelto = true; this._notificarCargado(); } };
+
+        // Timeout de seguridad: 12 segundos
+        const timeoutId = setTimeout(() => {
+            if (resuelto) return;
+            console.warn(`[Pieza ${this.datos.id}] Timeout al cargar ${fuente}; usando respaldo.`);
+            this.crearProcedural();
+            finalizar();
+        }, 12000);
 
         try {
-            new THREE.GLTFLoader().load(
+            loader.load(
                 fuente,
                 (gltf) => {
-                    const modelo = gltf.scene;
+                    clearTimeout(timeoutId);
+                    if (resuelto) return;
+                    try {
+                        const modelo = gltf.scene;
+                        const caja = new THREE.Box3().setFromObject(modelo);
+                        const tam = caja.getSize(new THREE.Vector3());
+                        const centro = caja.getCenter(new THREE.Vector3());
 
-                    const caja = new THREE.Box3().setFromObject(modelo);
-                    const tam = caja.getSize(new THREE.Vector3());
-                    const centro = caja.getCenter(new THREE.Vector3());
-                    const anchoMax = glb.ancho || ANCHO_MAX; 
-                    const escala = Math.min((glb.alto || ALTO_PIEZA) / tam.y, anchoMax / Math.max(tam.x, tam.z));
-                    
-                    modelo.scale.setScalar(escala);
-                    modelo.position.copy(centro).multiplyScalar(-escala);
-                    modelo.position.x += (glb.dx || 0);
-
-                    modelo.traverse((child) => {
-                        if (child.isMesh) {
-                            if (glb.color && child.material && child.material.map) {
-                                const mapa = child.material.map;
-                                mapa.encoding = THREE.LinearEncoding; 
-                                child.material = new THREE.MeshStandardMaterial({
-                                    map: mapa, metalness: 0.4, roughness: 0.45,
-                                    emissive: (glb.emisivo !== undefined ? glb.emisivo : 0x555555), emissiveMap: mapa 
-                                });
-                            } else {
-                                // SOLUCIÓN AL MODELO NEGRO: Color base visible y menos "metalness"
-                                child.material = new THREE.MeshStandardMaterial({ 
-                                    color: 0xffd700, // Color oro
-                                    metalness: 0.6,  // Reducido para que la luz le afecte
-                                    roughness: 0.3, 
-                                    emissive: 0x332200 // Leve brillo para que resalte
-                                });
-                            }
-                            child.castShadow = false; // OPTIMIZACIÓN
-                            child.receiveShadow = false;
+                        if (tam.y === 0 || !isFinite(tam.y)) {
+                            // Modelo vacío o inválido
+                            this.crearProcedural();
+                            finalizar();
+                            return;
                         }
-                    });
 
-                    this.piezaMesh.position.y = ALTURA_FLOTANDO;
-                    this.piezaMesh.add(modelo);
+                        const anchoMax = glb.ancho || ANCHO_MAX;
+                        const escala = Math.min(
+                            (glb.alto || ALTO_PIEZA) / tam.y,
+                            anchoMax / Math.max(tam.x, tam.z)
+                        );
+
+                        modelo.scale.setScalar(escala);
+                        modelo.position.copy(centro).multiplyScalar(-escala);
+                        modelo.position.x += (glb.dx || 0);
+
+                        modelo.traverse((child) => {
+                            if (child.isMesh) {
+                                if (glb.color && child.material && child.material.map) {
+                                    const mapa = child.material.map;
+                                    mapa.encoding = THREE.LinearEncoding;
+                                    child.material = new THREE.MeshStandardMaterial({
+                                        map: mapa, metalness: 0.4, roughness: 0.45,
+                                        emissive: (glb.emisivo !== undefined ? glb.emisivo : 0x555555),
+                                        emissiveMap: mapa
+                                    });
+                                } else {
+                                    child.material = new THREE.MeshStandardMaterial({
+                                        color: 0xffd700,
+                                        metalness: 0.55,
+                                        roughness: 0.35,
+                                        emissive: 0x2a1f00
+                                    });
+                                }
+                                child.castShadow = false;
+                                child.receiveShadow = false;
+                                child.frustumCulled = true;
+                            }
+                        });
+
+                        this.piezaMesh.add(modelo);
+                        finalizar();
+                    } catch (e) {
+                        console.warn(`[Pieza ${this.datos.id}] Error procesando GLB:`, e);
+                        this.crearProcedural();
+                        finalizar();
+                    }
                 },
                 undefined,
                 (error) => {
-                    console.warn('Error al cargar el modelo, usando respaldo:', fuente, error);
+                    clearTimeout(timeoutId);
+                    console.warn(`[Pieza ${this.datos.id}] No se pudo cargar ${fuente}:`, error);
                     this.crearProcedural();
+                    finalizar();
                 }
             );
         } catch (e) {
+            clearTimeout(timeoutId);
+            console.warn(`[Pieza ${this.datos.id}] Excepción al cargar GLB:`, e);
             this.crearProcedural();
+            finalizar();
         }
     }
 
@@ -195,7 +271,8 @@ window.Pieza = class Pieza {
         const { x, z } = this.datos.pos;
         this.boton = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.1), window.matBoton);
         const dirAlCentro = this.centroSala.clone().sub(new THREE.Vector3(x, 0, z));
-        dirAlCentro.y = 0; dirAlCentro.normalize();
+        dirAlCentro.y = 0;
+        dirAlCentro.normalize();
         this.boton.position.set(x, 1.2, z).add(dirAlCentro.clone().multiplyScalar(0.9));
         this.boton.rotation.y = this.anguloRotacion;
         this.boton.userData = { pieza: this.datos };

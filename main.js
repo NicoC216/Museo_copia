@@ -1,7 +1,14 @@
+// ============================================================
+// main.js
+// ============================================================
 const canvas = document.getElementById('c');
+if (typeof THREE === 'undefined') {
+    document.body.innerHTML = '<p style="color:white;text-align:center;padding:2rem;font-family:Georgia,serif;">Error: no se pudo cargar three.js. Revisa tu conexión a internet.</p>';
+    throw new Error('THREE no cargado');
+}
+
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
 
-// Detecta qué GPU usa el navegador
 let nombreGPU = 'desconocida';
 (function () {
     const gl = renderer.getContext();
@@ -11,7 +18,6 @@ let nombreGPU = 'desconocida';
 })();
 const SIN_GPU = /basic render|swiftshader|llvmpipe|software/i.test(nombreGPU);
 
-// Si el navegador renderiza por software, avisa al visitante
 if (SIN_GPU) {
     const aviso = document.createElement('div');
     aviso.style.cssText = 'position:fixed;bottom:10px;left:50%;transform:translateX(-50%);z-index:200;' +
@@ -23,16 +29,16 @@ if (SIN_GPU) {
     document.body.appendChild(aviso);
 }
 
-// Calidad adaptativa
-const ESCALA_MAX = Math.min(window.devicePixelRatio, 2);
-const ESCALA_MIN = 0.5;
-let escala = SIN_GPU ? 0.75 : ESCALA_MAX;
-let acumTiempo = 0, acumFrames = 0, intervalosOmitidos = 1;
+const ESCALA_MAX = SIN_GPU ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.5);
+const ESCALA_MIN = 0.4;
+let escala = ESCALA_MAX;
+let acumTiempo = 0, acumFrames = 0, intervalosOmitidos = 2;
 
 function aplicarEscala() {
     renderer.setPixelRatio(escala);
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
 function monitorear(delta) {
     if (delta > 0.5) { acumTiempo = 0; acumFrames = 0; return; }
     acumTiempo += delta; acumFrames++;
@@ -41,44 +47,47 @@ function monitorear(delta) {
     acumTiempo = 0; acumFrames = 0;
     if (intervalosOmitidos > 0) { intervalosOmitidos--; return; }
     if (fps < 40 && escala > ESCALA_MIN) {
-        escala = Math.max(ESCALA_MIN, escala * 0.8);
+        escala = Math.max(ESCALA_MIN, escala * 0.85);
         aplicarEscala();
-        console.log('Calidad ajustada: escala', escala.toFixed(2), 'fps', fps.toFixed(0));
+    } else if (fps > 58 && escala < ESCALA_MAX) {
+        escala = Math.min(ESCALA_MAX, escala * 1.05);
+        aplicarEscala();
     }
 }
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(escala);
-renderer.shadowMap.enabled = !SIN_GPU; // Desactiva sombras si no hay GPU
+renderer.shadowMap.enabled = !SIN_GPU;
 renderer.shadowMap.type = THREE.PCFShadowMap;
-renderer.shadowMap.autoUpdate = false; // OPTIMIZACIÓN: Las sombras no se recalculan cada frame
+renderer.shadowMap.autoUpdate = false;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0a0a);
-scene.fog = new THREE.Fog(0x0a0a0a, 40, 120);
+scene.fog = new THREE.Fog(0x0a0a0a, 40, 100);
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.rotation.order = 'YXZ';
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.4)); 
-const hemi = new THREE.HemisphereLight(0xffffff, 0x111111, 0.5);
-scene.add(hemi);
-const dirLight = new THREE.DirectionalLight(0xfff5e6, 0.8);
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.5));
+const dirLight = new THREE.DirectionalLight(0xfff5e6, 0.7);
 dirLight.position.set(20, 40, 20);
 dirLight.castShadow = !SIN_GPU;
-dirLight.shadow.mapSize.width = 1024;
-dirLight.shadow.mapSize.height = 1024;
-dirLight.shadow.camera.left = -50;
-dirLight.shadow.camera.right = 50;
-dirLight.shadow.camera.top = 50;
-dirLight.shadow.camera.bottom = -50;
+if (dirLight.shadow) {
+    dirLight.shadow.mapSize.width = 512;
+    dirLight.shadow.mapSize.height = 512;
+    dirLight.shadow.camera.left = -50;
+    dirLight.shadow.camera.right = 50;
+    dirLight.shadow.camera.top = 50;
+    dirLight.shadow.camera.bottom = -50;
+}
 scene.add(dirLight);
 
 const colisiones = window.crearMuseo(scene);
 
 const PIEZAS_DATA = [
     // --- SALA 1: EL TESORO QUIMBAYA (Centro: -32, 0, 26) ---
-    // Redistribuidas para no bloquear la puerta de entrada (x: -24, z: 26)
+    // Distribución limpia: Oeste(4), Sur(4), Norte(3). Este libre para no bloquear la puerta.
     {
         id: 1, nombre: "Poporo Quimbaya", cultura: "Quimbaya, siglos I–VI d. C.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
         descripcion: "El poporo guardaba cal en polvo que se mezclaba con hojas de coca en un uso ritual andino. Esta botella con hombros lleva una figura femenina a cada lado y, según el Met, aún conserva cal en su interior. N.º 1991.419.22.",
@@ -100,29 +109,9 @@ const PIEZAS_DATA = [
         modelo: "pin_quimbaya_culture_gallo", pos: new THREE.Vector3(-38, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 7, nombre: "Collar separador Quimbaya", cultura: "Quimbaya (fecha: por completar)", museo: "Museo de América, Madrid", pais: "España",
-        descripcion: "Collar separador formado por 11 cuentas tubulares unidas en una barra. Ficha por completar: fecha, técnica y n.º de objeto.",
-        modelo: "collar_separador_quimbaya", pos: new THREE.Vector3(-32, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
-    },
-    {
-        id: 13, nombre: "Pendant Quimbaya Tres", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Colgante Quimbaya 3. Ficha por completar.",
-        modelo: "pendant_quimbaya_culture_tres", pos: new THREE.Vector3(-26, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
-    },
-    {
-        id: 12, nombre: "Pendant Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Colgante Quimbaya. Ficha por completar.",
-        modelo: "pendant_quimbaya_culture", pos: new THREE.Vector3(-26, 0, 32), centroSala: new THREE.Vector3(-32, 0, 26)
-    },
-    {
-        id: 11, nombre: "Necklace Piece Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Pieza de collar Quimbaya. Ficha por completar.",
-        modelo: "necklace_piece_quimbaya_culture", pos: new THREE.Vector3(-26, 0, 20), centroSala: new THREE.Vector3(-32, 0, 26)
-    },
-    {
-        id: 10, nombre: "Helmet Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Casco Quimbaya. Ficha por completar.",
-        modelo: "helmet_quimbaya_culture", pos: new THREE.Vector3(-26, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+        id: 8, nombre: "Ear Ornament Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
+        descripcion: "Ornamento de oreja Quimbaya. Ficha por completar.",
+        modelo: "ear_ornament_quimbaya_culture", pos: new THREE.Vector3(-35, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
         id: 9, nombre: "Gold Incense Burner", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
@@ -130,9 +119,29 @@ const PIEZAS_DATA = [
         modelo: "gold_incense_burner_quimbaya_culture", pos: new THREE.Vector3(-32, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 8, nombre: "Ear Ornament Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Ornamento de oreja Quimbaya. Ficha por completar.",
-        modelo: "ear_ornament_quimbaya_culture", pos: new THREE.Vector3(-35, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+        id: 10, nombre: "Helmet Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
+        descripcion: "Casco Quimbaya. Ficha por completar.",
+        modelo: "helmet_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 11, nombre: "Necklace Piece Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
+        descripcion: "Pieza de collar Quimbaya. Ficha por completar.",
+        modelo: "necklace_piece_quimbaya_culture", pos: new THREE.Vector3(-26, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 7, nombre: "Collar separador Quimbaya", cultura: "Quimbaya (fecha: por completar)", museo: "Museo de América, Madrid", pais: "España",
+        descripcion: "Collar separador formado por 11 cuentas tubulares unidas en una barra. Ficha por completar: fecha, técnica y n.º de objeto.",
+        modelo: "collar_separador_quimbaya", pos: new THREE.Vector3(-35, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 13, nombre: "Pendant Quimbaya Tres", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
+        descripcion: "Colgante Quimbaya 3. Ficha por completar.",
+        modelo: "pendant_quimbaya_culture_tres", pos: new THREE.Vector3(-32, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
+    },
+    {
+        id: 12, nombre: "Pendant Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
+        descripcion: "Colgante Quimbaya. Ficha por completar.",
+        modelo: "pendant_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
 
     // --- SALA 3: LOS TAIRONA (Centro: -32, 0, -26) ---
@@ -156,26 +165,36 @@ const PIEZAS_DATA = [
 ];
 
 const botones = [];
+const totalPiezas = PIEZAS_DATA.length;
 let piezasCargadas = 0;
 
-// Carga en cola para evitar saturación de red
-PIEZAS_DATA.forEach((datos, index) => {
-    setTimeout(() => {
-        const p = new window.Pieza(datos, scene, datos.centroSala);
-        botones.push(p.boton);
+const divCargando = document.getElementById('cargando');
+function actualizarCarga() {
+    if (!divCargando) return;
+    if (piezasCargadas >= totalPiezas) {
+        divCargando.style.display = 'none';
+        if (!SIN_GPU) renderer.shadowMap.needsUpdate = true;
+    } else {
+        divCargando.style.display = 'block';
+        divCargando.textContent = `Cargando piezas... ${piezasCargadas}/${totalPiezas}`;
+    }
+}
+actualizarCarga();
+
+PIEZAS_DATA.forEach((datos) => {
+    const p = new window.Pieza(datos, scene, datos.centroSala, colisiones, () => {
         piezasCargadas++;
-        
-        // Cuando todas las piezas terminen de cargar, actualizamos el mapa de sombras una sola vez
-        if (piezasCargadas === PIEZAS_DATA.length && !SIN_GPU) {
-            renderer.shadowMap.needsUpdate = true;
-        }
-    }, index * 250); 
+        actualizarCarga();
+    });
+    botones.push(p.boton);
 });
 
 window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
-// ===== Estado de pausa / pointer lock =====
+// Pre-compilar shaders para evitar tirones al entrar
+try { renderer.compile(scene, camera); } catch (e) {}
+
 let pausado = false;
 let pointerEstuvoBloqueado = false;
 let estabaMostrandoInfo = false;
@@ -230,7 +249,7 @@ document.getElementById('btnEntrar').addEventListener('click', () => {
     document.getElementById('salir').style.display = 'block';
     document.getElementById('hud').style.display = 'block';
     document.getElementById('cross').style.display = 'block';
-    jugador.pos.set(0, window.OJO_Y, 35); 
+    jugador.pos.set(0, window.OJO_Y, 35);
     jugador.yaw = 0; jugador.pitch = 0;
     jugador.enJuego = true;
     bloquearPuntero();
@@ -288,17 +307,18 @@ function animar() {
     }
     estabaMostrandoInfo = piVisible;
 
-    if (window.objetosFlotantes) {
+    if (window.objetosFlotantes && window.objetosFlotantes.length) {
         const time = reloj.getElapsedTime();
-        window.objetosFlotantes.forEach(obj => {
+        const lista = window.objetosFlotantes;
+        for (let i = 0; i < lista.length; i++) {
+            const obj = lista[i];
             obj.mesh.rotation.y = time * obj.speedY;
             obj.mesh.rotation.x = time * obj.speedX;
             obj.mesh.position.y = obj.baseY + Math.sin(time * obj.floatSpeed + obj.offset) * 0.15;
-        });
+        }
     }
 
     jugador.actualizar(dt);
-
     renderer.render(scene, camera);
 }
 
