@@ -114,114 +114,110 @@ const PIEZAS_DATA = [
     // NOTA: El ID 3 (pin_quimbaya_culture) fue eliminado de aquí. 
     // Ahora solo hay 10 vitrinas en esta sala.
     {
-        id: 14, nombre: "Pin Quimbaya Gallo", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Alfiler gallo Quimbaya. Ficha por completar.",
+        id: 14, nombre: "Pin Quimbaya Gallo", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América (Madrid, España)", pais: "España",
+        descripcion: "Alfiler gallo Quimbaya. Alfiler de tumbaga hecho con fundición a la cera perdida, pulido y soldadura.",
         modelo: "pin_quimbaya_culture_gallo", pos: new THREE.Vector3(-38, 0, 30), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 8, nombre: "Ear Ornament Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Ornamento de oreja Quimbaya. Ficha por completar.",
+        id: 8, nombre: "Ear Ornament Quimbaya", cultura: "Quimbaya siglos IV–V d. C", museo: " La Soledad (Filandia, Colombia)", pais: "Finlandia",
+        descripcion: "Ornamento de oreja Quimbaya. Adorno para la oreja en tumbaga, modelado a la cera perdida, pulido y trabajado con filigrana simulada.",
         modelo: "ear_ornament_quimbaya_culture", pos: new THREE.Vector3(-38, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 9, nombre: "Gold Incense Burner", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Incensario de oro Quimbaya. Ficha por completar.",
+        id: 9, nombre: "Gold Incense Burner", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América (Madrid, España)", pais: "España",
+        descripcion: "Incensario de oro Quimbaya. Incensario de oro con rostro, hecho con cera perdida, pulido y soldadura..",
         modelo: "gold_incense_burner_quimbaya_culture", pos: new THREE.Vector3(-35, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 10, nombre: "Helmet Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Casco Quimbaya. Ficha por completar.",
+        id: 10, nombre: "Helmet Quimbaya", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América (Madrid, España)", pais: "España",
+        descripcion: "Casco Quimbaya. Casco de oro hecho con cera perdida, pulido, laminado y repujado.",
         modelo: "helmet_quimbaya_culture", pos: new THREE.Vector3(-32, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 11, nombre: "Necklace Piece Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Pieza de collar Quimbaya. Ficha por completar.",
+        id: 11, nombre: "Necklace Piece Quimbaya", cultura: "Quimbaya siglos IV–V d. C", museo: "Museo de América (Madrid, España", pais: "España",
+        descripcion: "Pieza de collar Quimbaya. Pieza de collar en tumbaga, procedente del sitio arqueológico de La Soledad (Filandia).",
         modelo: "necklace_piece_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 16), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 7, nombre: "Collar separador Quimbaya", cultura: "Quimbaya (fecha: por completar)", museo: "Museo de América, Madrid", pais: "España",
+        id: 7, nombre: "Collar separador Quimbaya", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América, Madrid", pais: "España",
         descripcion: "Collar separador formado por 11 cuentas tubulares unidas en una barra. Ficha por completar: fecha, técnica y n.º de objeto.",
         modelo: "collar_separador_quimbaya", pos: new THREE.Vector3(-35, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 13, nombre: "Pendant Quimbaya Tres", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Colgante Quimbaya 3. Ficha por completar.",
+        id: 13, nombre: "Pendant Quimbaya Tres", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América (Madrid, España)", pais: "España",
+        descripcion: "Colgante Quimbaya 3. Colgante de tumbaga hecho con cera perdida y pulido.",
         modelo: "pendant_quimbaya_culture_tres", pos: new THREE.Vector3(-32, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
     {
-        id: 12, nombre: "Pendant Quimbaya", cultura: "Quimbaya (por completar)", museo: "Por definir", pais: "Por definir",
-        descripcion: "Colgante Quimbaya. Ficha por completar.",
+        id: 12, nombre: "Pendant Quimbaya", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América (Madrid, España)", pais: "España",
+        descripcion: "Colgante Quimbaya. Colgante de tumbaga procedente del sitio arqueológico de La Soledad (Filandia).",
         modelo: "pendant_quimbaya_culture", pos: new THREE.Vector3(-29, 0, 36), centroSala: new THREE.Vector3(-32, 0, 26)
     },
 
     // --- SALA 2: TUNJOS (Centro: -32, 0, 0) ---
     {
-        id: 15, nombre: "Tunjo Femenino", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Figura femenina en oro. Ficha por completar.",
+        id: 15, nombre: "Tunjo Femenino", cultura: "Muisca siglos X–XVI ·", museo: "Museo Británico (Londres, Reino Unido)", pais: "Reino Unido",
+        descripcion: "Figura femenina en oro. Representa a una mujer con un collar de cuatro colgantes circulares y un cinturón trenzado; de su hombro izquierdo cuelga una pelota atada a una cuerda. Le falta la cabeza.",
         modelo: "01_tunjo_femenino", pos: new THREE.Vector3(-38, 0, -9), centroSala: new THREE.Vector3(-32, 0, 0)
     },
-    {
-        id: 16, nombre: "Colgante con Pájaro", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Colgante con figura de ave. Ficha por completar.",
+    { 
+
+        id: 16, nombre: "Colgante con Pájaro", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante con figura de ave. colgante con un pájaro y discos colgantes.",
         modelo: "colgante_con_pajaro", pos: new THREE.Vector3(-38, 0, -3), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 17, nombre: "Colgante Pájaro", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Colgante de ave. Ficha por completar.",
+        id: 17, nombre: "Colgante Pájaro", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante de ave. Muchas piezas muiscas son ofrendas votivas hechas con cera perdida en tumbaga y a menudo se dejaban sin pulir, como este colgante.",
         modelo: "colgante_pajaro", pos: new THREE.Vector3(-38, 0, 3), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 18, nombre: "Figura Femenina Tunjo", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Tunjo femenino. Ficha por completar.",
-        modelo: "figura_femenina_tunjo", pos: new THREE.Vector3(-38, 0, 9), centroSala: new THREE.Vector3(-32, 0, 0)
-    },
-    {
-        id: 19, nombre: "Figura Masculina en Taburete", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Tunjo masculino sentado en taburete. Ficha por completar.",
+        id: 18, nombre: "Figura Femenina Tunjo", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Tunjo masculino sentado en taburete. Pequeño tunjo que muestra a una figura masculina sentada sobre un taburete de cuatro patas.",
         modelo: "figura_masculina_taburete", pos: new THREE.Vector3(-34, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 20, nombre: "Figura Masculina Tunjo", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Tunjo masculino. Ficha por completar.",
+        id: 20, nombre: "Figura Masculina Tunjo", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Tunjo masculino. Tunjo masculino en oro, de la región del lago Guatavita, un lugar sagrado para los muisca.",
         modelo: "figura_masculina_tunjo", pos: new THREE.Vector3(-32, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 21, nombre: "Figura Masculina Tunjo (1991)", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Tunjo masculino variante 1991. Ficha por completar.",
+        id: 21, nombre: "Figura Masculina Tunjo (1991)", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Tunjo masculino variante 1991. Tunjo masculino muy esbelto, de apenas 6,4 cm de alto.",
         modelo: "figura_masculina_tunjo_1991", pos: new THREE.Vector3(-30, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 22, nombre: "Figura Masculina Tunjo (2000)", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Tunjo masculino variante 2000. Ficha por completar.",
+        id: 22, nombre: "Figura Masculina Tunjo (2000)", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Tunjo masculino variante 2000. Tunjo masculino de casi quince centímetros, con tocado rectangular.",
         modelo: "figura_masculina_tunjo_2000", pos: new THREE.Vector3(-34, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 23, nombre: "Sección de Diadema", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Fragmento de diadema en oro. Ficha por completar.",
+        id: 23, nombre: "Sección de Diadema", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Fragmento de diadema en oro. Fragmento de diadema con calados en forma de red y discos colgantes.",
         modelo: "seccion_de_diadema", pos: new THREE.Vector3(-32, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
-        id: 24, nombre: "Serpiente Tunjo", cultura: "Muisca", museo: "Por definir", pais: "Por definir",
-        descripcion: "Figura de serpiente en oro. Ficha por completar.",
+        id: 24, nombre: "Serpiente Tunjo", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Figura de serpiente en oro. Tunjo en forma de serpiente, una figura delgada y trenzada de unos once centímetros.",
         modelo: "serpiente_tunjo", pos: new THREE.Vector3(-30, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
 
     // --- SALA 3: LOS TAIRONA (Centro: -32, 0, -26) ---
     {
-        id: 4, nombre: "Pectoral de Ave (Tairona)", cultura: "Tairona, siglos X–XVI, Colombia. Aleación de oro.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
-        descripcion: "Las alas y la cola extendidas son comunes en Costa Rica y Panamá, pero aquí la pieza es más ornamentada, con trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Las garras sostienen una serpiente estilizada de dos cabezas. N.º 1974.271.12.",
+        id: 4, nombre: "Colgante de ave con serpiente", cultura: "Tairona, siglos X–XVI, Colombia. Aleación de oro.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante de ave con serpiente. Ave de alas y cola extendidas, un rasgo común en Costa Rica y Panamá, aquí con las trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Sus garras sostienen una serpienteLas alas y la cola extendidas son comunes en Costa Rica y Panamá, pero aquí la pieza es más ornamentada, con trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Las garras sostienen una serpiente estilizada de dos cabezas. N.º 1974.271.12.",
         modelo: "ave_tairona", pos: new THREE.Vector3(-38, 0, -20), centroSala: new THREE.Vector3(-32, 0, -26)
     },
     {
-        id: 5, nombre: "Pectoral Dorado", cultura: "Tairona, siglos X–XVI, Colombia.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
+        id: 5, nombre: "Pectoral Dorado", cultura: "Tairona, siglos X–XVI, Colombia.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
         descripcion: "Pectoral de oro tairona, pieza de orfebrería de alta complejidad.",
         modelo: "pectoral_dorado", pos: new THREE.Vector3(-38, 0, -32), centroSala: new THREE.Vector3(-32, 0, -26)
     },
 
     // --- SALA 4: EL RESTO DE COLOMBIA (Centro: -16, 0, -32) ---
     {
-        id: 6, nombre: "Nose Ornament (ornamento nasal)", cultura: "Colombia (origen atribuido con reservas), siglos X–XVI. Oro martillado.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
-        descripcion: "Este ornamento nasal de lámina de oro martillada combina una pieza central en forma de media luna con dos volutas laterales. El museo lo atribuye con reservas a Colombia, y su cultura de origen no está confirmada. N.º 1974.271.64.",
+        id: 6, nombre: "Ornamento nasal", cultura: "Colombia (origen atribuido con reservas), siglos X–XVI. Oro martillado.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Ornamento nasal. Ornamento nasal de lámina de oro martillada, con una pieza central en forma de media luna y dos volutas laterales. El museo lo atribuye con reservas a Colombia y su cultura de origen no está confirmada.",
         modelo: "nariguera_dorada", pos: new THREE.Vector3(-16, 0, -38), centroSala: new THREE.Vector3(-16, 0, -32)
     }
 ];
