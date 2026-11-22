@@ -202,16 +202,61 @@ const PIEZAS_DATA = [
         modelo: "serpiente_tunjo", pos: new THREE.Vector3(-30, 0, 10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
 
-    // --- SALA 3: LOS TAIRONA (Centro: -32, 0, -26) ---
+    // --- SALA 3: TAIRONA (Centro: -32, 0, -26) ---
     {
-        id: 4, nombre: "Colgante de ave con serpiente", cultura: "Tairona, siglos X–XVI, Colombia. Aleación de oro.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
-        descripcion: "Colgante de ave con serpiente. Ave de alas y cola extendidas, un rasgo común en Costa Rica y Panamá, aquí con las trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Sus garras sostienen una serpienteLas alas y la cola extendidas son comunes en Costa Rica y Panamá, pero aquí la pieza es más ornamentada, con trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Las garras sostienen una serpiente estilizada de dos cabezas. N.º 1974.271.12.",
-        modelo: "ave_tairona", pos: new THREE.Vector3(-38, 0, -20), centroSala: new THREE.Vector3(-32, 0, -26)
+        id: 25, nombre: "Pectoral de Ave", cultura: "Tairona, siglos X–XVI, Colombia. Aleación de oro.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Las alas y la cola extendidas son comunes en Costa Rica y Panamá, pero aquí la pieza es más ornamentada, con trenzas, espirales y bolitas de oro típicas de la orfebrería tairona. Las garras sostienen una serpiente estilizada de dos cabezas. N.º 1974.271.12.",
+        modelo: "ave_tairone", pos: new THREE.Vector3(-38, 0, -18), centroSala: new THREE.Vector3(-32, 0, -26)
     },
     {
-        id: 5, nombre: "Pectoral Dorado", cultura: "Tairona, siglos X–XVI, Colombia.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
-        descripcion: "Pectoral de oro tairona, pieza de orfebrería de alta complejidad.",
-        modelo: "pectoral_dorado", pos: new THREE.Vector3(-38, 0, -32), centroSala: new THREE.Vector3(-32, 0, -26)
+        id: 26, nombre: "Campana de Oro", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Campana de oro. Pequeña campana que el Met clasifica como instrumento musical; mide poco más de un centímetro.",
+        modelo: "campana_de_oro", pos: new THREE.Vector3(-38, 0, -22), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 27, nombre: "Colgante con Figura 31", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante con figura. Colgante tairona con figura, fundido en una aleación de oro y de unos ocho centímetros de alto. Pendiente: el archivo fuente no trae descripción de esta pieza; se deja solo lo que dice la ficha.",
+        modelo: "colgante_con_figura_31", pos: new THREE.Vector3(-38, 0, -26), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 28, nombre: "Colgante con Figura", cultura: "Tairona, 900–1600 d. C.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante con figura. Figura masculina de hombros anchos, de pie con las manos en las caderas. Tiene hocico dentado de cocodrilo y hoja nasal de murciélago, y un tocado monumental con dos aves de pico grande y adornos laterales en espiral y trenzados. Podría representar a un ser sobrenatural, un gobernante o un especialista ritual en transformación simbólica y espiritual.",
+        modelo: "colgante_con_figura", pos: new THREE.Vector3(-38, 0, -30), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 29, nombre: "Colgante de Campana", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante de campana.  Colgante en forma de campana con rostro y orejeras de espirales.",
+        modelo: "colgante_de_campana", pos: new THREE.Vector3(-38, 0, -34), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 30, nombre: "Colgante en Forma de Figura", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante en forma de figura. Representa a una figura masculina de anchas espaldas, tal vez un noble o jefe, con un enorme penacho de trenzas y espirales y dos pájaros de pico largo sobre el tocado. Nariguera, orejeras y bezote son miniaturas de gran precisión, comparables a las piezas de tamaño natural halladas en tumbas taironas.",
+        modelo: "colgante_en_forma_de_figura", pos: new THREE.Vector3(-34, 0, -34), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 31, nombre: "Collar", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Collar de oro. Collar de oro formado por elementos alargados que se cierran en círculo, de unos 23 cm de diámetro.",
+        modelo: "collar", pos: new THREE.Vector3(-30, 0, -34), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 32, nombre: "Labret 2005", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Labret de oro. Otro labret tairona, de forma de sombrero con ala.",
+        modelo: "labret_2005", pos: new THREE.Vector3(-26, 0, -34), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 33, nombre: "Remate de Hueso", cultura: "Tairona, siglos 1000–1600", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Remate de hueso. Remate tallado en hueso; no todo lo que salió de Colombia es oro. Decisión pendiente: dejarlo o sacarlo, porque la sala trata de orfebrería.",
+        modelo: "remate_de_hueso", pos: new THREE.Vector3(-30, 0, -18), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 34, nombre: "Labret 1974", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Labret de oro. Labret, adorno que se llevaba en el labio inferior.",
+        modelo: "s3-05_labret_1974", pos: new THREE.Vector3(-34, 0, -18), centroSala: new THREE.Vector3(-32, 0, -26)
+    },
+    {
+        id: 35, nombre: "Tapa de Labret", cultura: "Tairona, siglos X–XVI", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Tapa de labret. Tapa de labret decorada con espirales de hilo de oro.",
+        modelo: "tapa_de_labret", pos: new THREE.Vector3(-26, 0, -18), centroSala: new THREE.Vector3(-32, 0, -26)
     },
 
     // --- SALA 4: EL RESTO DE COLOMBIA (Centro: -16, 0, -32) ---

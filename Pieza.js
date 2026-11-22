@@ -27,9 +27,20 @@ const MODELOS_GLB = {
     23: { archivo: 'modelos/Sala2/seccion_de_diadema.glb', dx: 0 },
     24: { archivo: 'modelos/Sala2/serpiente_tunjo.glb', dx: 0 },
 
-    // --- SALAS 3 Y 4 ---
-    4: { archivo: 'modelos/Sala3/ave_tairona.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },
-    5: { archivo: 'modelos/Sala3/pectoral_dorado.glb', dx: 0 },
+    // --- SALA 3: NUEVOS MODELOS (Tairona) ---
+    25: { archivo: 'modelos/Sala3/ave_tairone.glb', dx: 0, alto: 1.25, color: true, emisivo: 0x555555 },
+    26: { archivo: 'modelos/Sala3/campana_de_oro.glb', dx: 0 },
+    27: { archivo: 'modelos/Sala3/colgante_con_figura_31.glb', dx: 0 },
+    28: { archivo: 'modelos/Sala3/colgante_con_figura.glb', dx: 0 },
+    29: { archivo: 'modelos/Sala3/colgante_de_campana.glb', dx: 0 },
+    30: { archivo: 'modelos/Sala3/colgante_en_forma_de_figura.glb', dx: 0 },
+    31: { archivo: 'modelos/Sala3/collar.glb', dx: 0 },
+    32: { archivo: 'modelos/Sala3/labret_2005.glb', dx: 0 },
+    33: { archivo: 'modelos/Sala3/remate_de_hueso.glb', dx: 0 },
+    34: { archivo: 'modelos/Sala3/s3-05_labret_1974.glb', dx: 0 },
+    35: { archivo: 'modelos/Sala3/tapa_de_labret.glb', dx: 0 },
+
+    // --- SALA 4 ---
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
 };
 
