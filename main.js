@@ -300,9 +300,19 @@ window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
 // ==========================================
-// <--- NUEVO 1: INSTANCIAR EL GESTOR DE SONIDO
+// INICIALIZACIÓN DEL SONIDO (CON PROTECCIÓN)
 // ==========================================
-const gestorSonido = new window.GestorSonido();
+let gestorSonido = null;
+// Verificamos que la clase exista para evitar que el script se caiga si falta Sonido.js
+if (typeof window.GestorSonido !== 'undefined') {
+    try {
+        gestorSonido = new window.GestorSonido();
+    } catch (e) {
+        console.warn("No se pudo inicializar el sistema de sonido:", e);
+    }
+} else {
+    console.warn("Sonido.js no está cargado. El museo funcionará sin audio.");
+}
 
 try { renderer.compile(scene, camera); } catch (e) {}
 
@@ -330,7 +340,7 @@ function abrirPausa() {
     jugador.enJuego = false;
     pausado = true;
     
-    // <--- NUEVO 2: PAUSAR MÚSICA
+    // <--- PAUSAR MÚSICA
     if (gestorSonido) gestorSonido.pausar();
 
     const pi = document.getElementById('panelInfo');
@@ -349,7 +359,7 @@ function cerrarPausa() {
     document.getElementById('cross').style.display = 'block';
     jugador.enJuego = true;
 
-    // <--- NUEVO 3: REANUDAR MÚSICA
+    // <--- REANUDAR MÚSICA
     if (gestorSonido) gestorSonido.reanudar();
 
     bloquearPuntero();
@@ -360,7 +370,7 @@ function salirAlIntro() {
     jugador.enJuego = false;
     if (document.pointerLockElement) document.exitPointerLock();
     
-    // <--- NUEVO 4: PAUSAR MÚSICA AL SALIR
+    // <--- PAUSAR MÚSICA AL SALIR
     if (gestorSonido) gestorSonido.pausar();
 
     document.getElementById('pausa').style.display = 'none';
@@ -379,7 +389,7 @@ document.getElementById('btnEntrar').addEventListener('click', () => {
     jugador.yaw = 0; jugador.pitch = 0;
     jugador.enJuego = true;
 
-    // <--- NUEVO 5: INICIAR MÚSICA (aprovechando el clic del usuario)
+    // <--- INICIAR MÚSICA (aprovechando el clic del usuario)
     if (gestorSonido) gestorSonido.iniciar();
 
     bloquearPuntero();
@@ -453,7 +463,7 @@ function animar() {
 
     jugador.actualizar(dt);
 
-    // <--- NUEVO 6: ACTUALIZAR EL SENSOR DE SONIDO CON LA POSICIÓN DEL JUGADOR
+    // <--- ACTUALIZAR EL SENSOR DE SONIDO CON LA POSICIÓN DEL JUGADOR
     if (gestorSonido) {
         gestorSonido.actualizar(jugador.pos.x, jugador.pos.z, dt);
     }
