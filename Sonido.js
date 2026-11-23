@@ -9,16 +9,18 @@ window.GestorSonido = class GestorSonido {
         this.zonaObjetivo = null;
         this.estaPausado = false;
 
-        // Diccionario con las canciones (por ahora solo la Sala 1)
-        // Aquí agregarás las demás rutas cuando las tengas listas.
+        // ==========================================
+        // DICCIONARIO DE AUDIOS
+        // ==========================================
+        // Aquí se asignan las rutas exactas de los archivos mp3 que subiste
         this.audios = {
             'Sala1': new Audio('musica/Sala1/tesoro_quimbaya01.mp3'),
-            'Sala2': null, // new Audio('musica/Sala2/cancion.mp3'),
-            'Sala3': null, // new Audio('musica/Sala3/cancion.mp3'),
-            'Sala4': null,
-            'Sala5': null,
-            'Sala6': null,
-            'Cafeteria': null,
+            'Sala2': new Audio('musica/Sala2/muisca.mp3'),
+            'Sala3': new Audio('musica/Sala3/tairona.mp3'),
+            'Sala4': new Audio('musica/Sala4/sinu_y_calima.mp3'),
+            'Sala5': new Audio('musica/Sala5/reflexion.mp3'),
+            'Sala6': new Audio('musica/Sala6/conexion.mp3'),
+            'Cafeteria': null, // Aquí puedes agregar la música de la cafetería en el futuro
             'Bano1': null,
             'Bano2': null,
             'Lobby': null
@@ -32,15 +34,17 @@ window.GestorSonido = class GestorSonido {
             }
         }
 
-        // Definición de los límites de cada sala (El "Sensor")
+        // ==========================================
+        // DEFINICIÓN DE LOS LÍMITES DE CADA SALA (SENSORES)
+        // ==========================================
         // Basado en las coordenadas de tu Entorno.js
         this.zonas = [
             { id: 'Sala1', minX: -40, maxX: -24, minZ: 12, maxZ: 40 },
             { id: 'Sala2', minX: -40, maxX: -24, minZ: -12, maxZ: 12 },
             { id: 'Sala3', minX: -40, maxX: -24, minZ: -40, maxZ: -12 },
             { id: 'Sala4', minX: -24, maxX: -8,  minZ: -40, maxZ: -24 },
-            { id: 'Sala5', minX: -8,  maxX: 8,  minZ: -40, maxZ: -24 },
-            { id: 'Sala6', minX: 8,   maxX: 24, minZ: -40, maxZ: -24 },
+            { id: 'Sala5', minX: -8,  maxX: 8,   minZ: -40, maxZ: -24 },
+            { id: 'Sala6', minX: 8,   maxX: 24,  minZ: -40, maxZ: -24 },
             { id: 'Cafeteria', minX: 24, maxX: 40, minZ: 12, maxZ: 40 },
             { id: 'Bano1', minX: 24, maxX: 40, minZ: -12, maxZ: 12 },
             { id: 'Bano2', minX: 24, maxX: 40, minZ: -40, maxZ: -12 }
@@ -51,13 +55,13 @@ window.GestorSonido = class GestorSonido {
     // Esta función se llama justo cuando el jugador hace clic en "Entrar al Museo"
     iniciar() {
         this.estaPausado = false;
-        // Actualizamos inmediatamente para saber dónde está el jugador
+        // Actualizamos inmediatamente para saber dónde está el jugador al entrar
         this.actualizarZona(0, 35); 
     }
 
     pausar() {
         this.estaPausado = true;
-        // Pausar todos los audios activos
+        // Pausar todos los audios activos para que no siga sonando en el menú
         for (const key in this.audios) {
             if (this.audios[key] && !this.audios[key].paused) {
                 this.audios[key].pause();
@@ -92,7 +96,7 @@ window.GestorSonido = class GestorSonido {
             // Reproducir la nueva canción si existe y estamos en juego
             if (this.audios[this.zonaObjetivo] && !this.estaPausado) {
                 this.audios[this.zonaObjetivo].play().catch(e => {
-                    // Ignorar errores de reproducción (políticas del navegador)
+                    // Ignorar errores de reproducción (políticas de los navegadores)
                 });
             }
         }
