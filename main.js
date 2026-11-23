@@ -63,7 +63,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(escala);
 renderer.shadowMap.enabled = !SIN_GPU;
 renderer.shadowMap.type = THREE.PCFShadowMap;
-renderer.shadowMap.autoUpdate = false; // OPTIMIZACIÓN: No recalcular sombras cada frame
+renderer.shadowMap.autoUpdate = false;
 
 // ==========================================
 // ESCENA Y CÁMARA
@@ -100,7 +100,6 @@ const colisiones = window.crearMuseo(scene);
 // ==========================================
 const PIEZAS_DATA = [
     // --- SALA 1: EL TESORO QUIMBAYA (Centro: -32, 0, 26) ---
-    // Exactamente 10 piezas.
     {
         id: 1, nombre: "Poporo Quimbaya", cultura: "Quimbaya, siglos I–VI d. C.", museo: "The Metropolitan Museum of Art (MET)", pais: "Estados Unidos",
         descripcion: "El poporo guardaba cal en polvo que se mezclaba con hojas de coca en un uso ritual andino. Esta botella con hombros lleva una figura femenina a cada lado y, según el Met, aún conserva cal en su interior. N.º 1991.419.22.",
@@ -111,8 +110,6 @@ const PIEZAS_DATA = [
         descripcion: "Alfiler de tumbaga hecho con fundición a la cera perdida, pulido y soldadura. N.º 17448.",
         modelo: "pin_quimbaya_color", pos: new THREE.Vector3(-38, 0, 22), centroSala: new THREE.Vector3(-32, 0, 26)
     },
-    // NOTA: El ID 3 (pin_quimbaya_culture) fue eliminado de aquí. 
-    // Ahora solo hay 10 vitrinas en esta sala.
     {
         id: 14, nombre: "Pin Quimbaya Gallo", cultura: "Quimbaya siglos IV–V d. C.", museo: "Museo de América (Madrid, España)", pais: "España",
         descripcion: "Alfiler gallo Quimbaya. Alfiler de tumbaga hecho con fundición a la cera perdida, pulido y soldadura.",
@@ -161,7 +158,6 @@ const PIEZAS_DATA = [
         modelo: "01_tunjo_femenino", pos: new THREE.Vector3(-38, 0, -9), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     { 
-
         id: 16, nombre: "Colgante con Pájaro", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
         descripcion: "Colgante con figura de ave. colgante con un pájaro y discos colgantes.",
         modelo: "colgante_con_pajaro", pos: new THREE.Vector3(-38, 0, -3), centroSala: new THREE.Vector3(-32, 0, 0)
@@ -173,7 +169,12 @@ const PIEZAS_DATA = [
     },
     {
         id: 18, nombre: "Figura Femenina Tunjo", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
-        descripcion: "Tunjo masculino sentado en taburete. Pequeño tunjo que muestra a una figura masculina sentada sobre un taburete de cuatro patas.",
+        descripcion: "FIgura Femenina Tunjo. pequeño tunjo femenino en oro, de unos cuatro centímetros de altura.",
+        modelo: "figura_femenina_tunjo", pos: new THREE.Vector3(-34, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
+    },
+    {
+        id: 19, nombre: "Figura Masculina sobre un taburete (Tunjo)", cultura: "Muisca siglos X–XVI ·", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Tunjo masculino sentado en taburete. Pequeño tunjo que muestra a una figura masculina sentada sobre un taburete de cuatro patas..",
         modelo: "figura_masculina_taburete", pos: new THREE.Vector3(-34, 0, -10), centroSala: new THREE.Vector3(-32, 0, 0)
     },
     {
@@ -270,8 +271,6 @@ const PIEZAS_DATA = [
 const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
 
-// LOG DE CONTROL: Esto imprimirá en la consola cuántas piezas se van a renderizar en total.
-// Sala 1 (10) + Sala 2 (10) + Sala 3 (2) + Sala 4 (1) = 23 piezas en total.
 console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
 
 let piezasCargadas = 0;
@@ -300,6 +299,11 @@ PIEZAS_DATA.forEach((datos) => {
 window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
+// ==========================================
+// <--- NUEVO 1: INSTANCIAR EL GESTOR DE SONIDO
+// ==========================================
+const gestorSonido = new window.GestorSonido();
+
 try { renderer.compile(scene, camera); } catch (e) {}
 
 // ==========================================
@@ -325,6 +329,10 @@ function abrirPausa() {
     if (pausado) return;
     jugador.enJuego = false;
     pausado = true;
+    
+    // <--- NUEVO 2: PAUSAR MÚSICA
+    if (gestorSonido) gestorSonido.pausar();
+
     const pi = document.getElementById('panelInfo');
     if (pi) pi.style.display = 'none';
     if (document.pointerLockElement) document.exitPointerLock();
@@ -340,6 +348,10 @@ function cerrarPausa() {
     document.getElementById('hud').style.display = 'block';
     document.getElementById('cross').style.display = 'block';
     jugador.enJuego = true;
+
+    // <--- NUEVO 3: REANUDAR MÚSICA
+    if (gestorSonido) gestorSonido.reanudar();
+
     bloquearPuntero();
 }
 
@@ -347,6 +359,10 @@ function salirAlIntro() {
     pausado = false;
     jugador.enJuego = false;
     if (document.pointerLockElement) document.exitPointerLock();
+    
+    // <--- NUEVO 4: PAUSAR MÚSICA AL SALIR
+    if (gestorSonido) gestorSonido.pausar();
+
     document.getElementById('pausa').style.display = 'none';
     document.getElementById('intro').style.display = 'flex';
     document.getElementById('salir').style.display = 'none';
@@ -362,6 +378,10 @@ document.getElementById('btnEntrar').addEventListener('click', () => {
     jugador.pos.set(0, window.OJO_Y, 35);
     jugador.yaw = 0; jugador.pitch = 0;
     jugador.enJuego = true;
+
+    // <--- NUEVO 5: INICIAR MÚSICA (aprovechando el clic del usuario)
+    if (gestorSonido) gestorSonido.iniciar();
+
     bloquearPuntero();
 });
 
@@ -432,6 +452,12 @@ function animar() {
     }
 
     jugador.actualizar(dt);
+
+    // <--- NUEVO 6: ACTUALIZAR EL SENSOR DE SONIDO CON LA POSICIÓN DEL JUGADOR
+    if (gestorSonido) {
+        gestorSonido.actualizar(jugador.pos.x, jugador.pos.z, dt);
+    }
+
     renderer.render(scene, camera);
 }
 
