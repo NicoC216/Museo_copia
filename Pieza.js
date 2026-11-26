@@ -75,6 +75,9 @@ window.Pieza = class Pieza {
         this.boton = null;
         this.piezaMesh = new THREE.Group();
 
+        // LOG DE CONTROL: Confirma que la pieza se está intentando crear
+        console.log(`[Vitrina] Generando pieza ID: ${this.datos.id} en pos:`, this.datos.pos);
+
         const dx = this.centroSala.x - this.datos.pos.x;
         const dz = this.centroSala.z - this.datos.pos.z;
         this.anguloRotacion = Math.atan2(dx, dz);
@@ -121,6 +124,7 @@ window.Pieza = class Pieza {
         if (glb) {
             this.cargarGLB(glb);
         } else {
+            console.warn(`[Pieza ${this.datos.id}] No hay modelo en el diccionario, usando respaldo.`);
             this.crearProcedural();
             this._notificarCargado();
         }
@@ -137,8 +141,6 @@ window.Pieza = class Pieza {
         const fuente = glb.archivo;
         let resuelto = false;
         const finalizar = () => { if (!resuelto) { resuelto = true; this._notificarCargado(); } };
-
-        console.log(`[Pieza ${this.datos.id}] Intentando cargar modelo: ${fuente}`);
 
         const timeoutId = setTimeout(() => {
             if (resuelto) return;
@@ -200,7 +202,7 @@ window.Pieza = class Pieza {
                         });
 
                         this.piezaMesh.add(modelo);
-                        console.log(`[Pieza ${this.datos.id}] Cargada con éxito.`);
+                        console.log(`[Pieza ${this.datos.id}] Cargada con éxito: ${fuente}`);
                         finalizar();
                     } catch (e) {
                         console.warn(`[Pieza ${this.datos.id}] Error procesando GLB:`, e);
@@ -225,7 +227,7 @@ window.Pieza = class Pieza {
     }
 
     crearProcedural() {
-        // Si el ID es 42 (Espada de Bolívar) y el archivo .glb falló, dibujamos una espada más grande y visible
+        // Si el ID es 42 (Espada de Bolívar), dibuja una espada que se vea bien
         if (this.datos.id === 42) {
             const hoja = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.2, 0.02), window.matOro);
             hoja.position.y = 0.3;
@@ -239,7 +241,6 @@ window.Pieza = class Pieza {
             guarda.position.y = -0.4;
             this.piezaMesh.add(guarda);
         } else {
-            // Respaldo genérico para cualquier otra pieza
             const base = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.2, 8), window.matOro);
             base.position.y = 0;
             this.piezaMesh.add(base);
@@ -265,6 +266,7 @@ window.Pieza = class Pieza {
         dirAlCentro.y = 0;
         dirAlCentro.normalize();
         
+        // Coloca el botón 0.9 unidades frente a la vitrina, mirando al pasillo
         this.boton.position.set(x, 1.2, z).add(dirAlCentro.clone().multiplyScalar(0.9));
         this.boton.rotation.y = this.anguloRotacion;
         this.boton.userData = { pieza: this.datos };

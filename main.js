@@ -268,7 +268,7 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
-    // CAMBIO CLAVE: centroSala ahora es (16, 0, -24), que corresponde a la puerta de entrada.
+    // Centro de la sala 6: X=16, Z=-32.
     {
         id: 42, nombre: "Espada de Bolívar", cultura: "Época de la Independencia", museo: "Museo del Oro (Bogotá, Colombia)", pais: "Colombia",
         descripcion: "Pieza que conecta con el Museo del Oro.",
@@ -278,9 +278,6 @@ const PIEZAS_DATA = [
 
 const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
-
-console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
-
 let piezasCargadas = 0;
 
 const divCargando = document.getElementById('cargando');
@@ -296,19 +293,26 @@ function actualizarCarga() {
 }
 actualizarCarga();
 
+// Se agrega un try-catch para que si una pieza falla, no detenga todo el museo
 PIEZAS_DATA.forEach((datos) => {
-    const p = new window.Pieza(datos, scene, datos.centroSala, colisiones, () => {
-        piezasCargadas++;
+    try {
+        const p = new window.Pieza(datos, scene, datos.centroSala, colisiones, () => {
+            piezasCargadas++;
+            actualizarCarga();
+        });
+        botones.push(p.boton);
+    } catch (error) {
+        console.error(`Error crítico al generar la pieza ID ${datos.id}:`, error);
+        piezasCargadas++; // Forzamos el conteo para que no se quede en "Cargando..."
         actualizarCarga();
-    });
-    botones.push(p.boton);
+    }
 });
 
 window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
 // ==========================================
-// INICIALIZACIÓN DEL SONIDO (CON PROTECCIÓN)
+// INICIALIZACIÓN DEL SONIDO
 // ==========================================
 let gestorSonido = null;
 if (typeof window.GestorSonido !== 'undefined') {
