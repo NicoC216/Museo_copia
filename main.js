@@ -7,13 +7,11 @@ if (typeof THREE === 'undefined') {
     throw new Error('THREE no cargado');
 }
 
-// Inicia el motor de renderizado (WebGL)
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
 
 // ==========================================
 // DETECCIÓN DE GPU Y CALIDAD ADAPTATIVA
 // ==========================================
-// Detecta qué tarjeta gráfica está usando el navegador
 let nombreGPU = 'desconocida';
 (function () {
     const gl = renderer.getContext();
@@ -22,7 +20,6 @@ let nombreGPU = 'desconocida';
     console.log('GPU en uso:', nombreGPU);
 })();
 
-// Si detecta que está renderizando por software (sin aceleración), avisa al usuario
 const SIN_GPU = /basic render|swiftshader|llvmpipe|software/i.test(nombreGPU);
 
 if (SIN_GPU) {
@@ -36,7 +33,6 @@ if (SIN_GPU) {
     document.body.appendChild(aviso);
 }
 
-// Sistema que baja o sube la resolución del canvas automáticamente si los FPS bajan
 const ESCALA_MAX = SIN_GPU ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.5);
 const ESCALA_MIN = 0.4;
 let escala = ESCALA_MAX;
@@ -55,10 +51,10 @@ function monitorear(delta) {
     acumTiempo = 0; acumFrames = 0;
     if (intervalosOmitidos > 0) { intervalosOmitidos--; return; }
     if (fps < 40 && escala > ESCALA_MIN) {
-        escala = Math.max(ESCALA_MIN, escala * 0.85); // Baja calidad
+        escala = Math.max(ESCALA_MIN, escala * 0.85);
         aplicarEscala();
     } else if (fps > 58 && escala < ESCALA_MAX) {
-        escala = Math.min(ESCALA_MAX, escala * 1.05); // Sube calidad
+        escala = Math.min(ESCALA_MAX, escala * 1.05);
         aplicarEscala();
     }
 }
@@ -67,24 +63,24 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(escala);
 renderer.shadowMap.enabled = !SIN_GPU;
 renderer.shadowMap.type = THREE.PCFShadowMap;
-renderer.shadowMap.autoUpdate = false; // Desactiva recálculo de sombras por frame
+renderer.shadowMap.autoUpdate = false;
 
 // ==========================================
 // ESCENA Y CÁMARA
 // ==========================================
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0a0a); // Fondo oscuro
-scene.fog = new THREE.Fog(0x0a0a0a, 40, 100); // Niebla para dar profundidad
+scene.background = new THREE.Color(0x0a0a0a);
+scene.fog = new THREE.Fog(0x0a0a0a, 40, 100);
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.rotation.order = 'YXZ'; // Orden crucial para que el ratón no gire la cámara de forma extraña
+camera.rotation.order = 'YXZ';
 
 // ==========================================
 // ILUMINACIÓN GLOBAL
 // ==========================================
-scene.add(new THREE.AmbientLight(0xffffff, 0.8)); // Luz base
-scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.7)); // Luz del cielo/ambiente
-const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.0); // Luz principal (como el sol)
+scene.add(new THREE.AmbientLight(0xffffff, 0.8)); 
+scene.add(new THREE.HemisphereLight(0xffeedd, 0x111111, 0.7));
+const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.0);
 dirLight.position.set(20, 40, 20);
 dirLight.castShadow = !SIN_GPU;
 if (dirLight.shadow) {
@@ -97,7 +93,6 @@ if (dirLight.shadow) {
 }
 scene.add(dirLight);
 
-// Llama a Entorno.js para construir paredes, pisos y luces
 const colisiones = window.crearMuseo(scene);
 
 // ==========================================
@@ -273,22 +268,22 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
+    // CAMBIO CLAVE: centroSala ahora es (16, 0, -24), que corresponde a la puerta de entrada.
     {
         id: 42, nombre: "Espada de Bolívar", cultura: "Época de la Independencia", museo: "Museo del Oro (Bogotá, Colombia)", pais: "Colombia",
         descripcion: "Pieza que conecta con el Museo del Oro.",
-        modelo: "espada_de_bolivar", pos: new THREE.Vector3(16, 0, -32), centroSala: new THREE.Vector3(16, 0, -32)
+        modelo: "espada_de_bolivar", pos: new THREE.Vector3(16, 0, -32), centroSala: new THREE.Vector3(16, 0, -24)
     }
 ];
 
-const botones = []; // Aquí se guardan los cubos dorados para detectar los clics
+const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
 
 console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
 
 let piezasCargadas = 0;
-const divCargando = document.getElementById('cargando');
 
-// Actualiza el contador flotante en pantalla de "Cargando piezas..."
+const divCargando = document.getElementById('cargando');
 function actualizarCarga() {
     if (!divCargando) return;
     if (piezasCargadas >= totalPiezas) {
@@ -301,7 +296,6 @@ function actualizarCarga() {
 }
 actualizarCarga();
 
-// Crea todas las vitrinas, modelos y botones
 PIEZAS_DATA.forEach((datos) => {
     const p = new window.Pieza(datos, scene, datos.centroSala, colisiones, () => {
         piezasCargadas++;
@@ -310,7 +304,6 @@ PIEZAS_DATA.forEach((datos) => {
     botones.push(p.boton);
 });
 
-// Inicia la UI y al jugador
 window.inicializarUI();
 const jugador = new window.Jugador(camera, scene, colisiones, botones);
 
@@ -318,7 +311,6 @@ const jugador = new window.Jugador(camera, scene, colisiones, botones);
 // INICIALIZACIÓN DEL SONIDO (CON PROTECCIÓN)
 // ==========================================
 let gestorSonido = null;
-// Solo inicia el sonido si la clase existe en Sonido.js, evitando que el museo se rompa
 if (typeof window.GestorSonido !== 'undefined') {
     try {
         gestorSonido = new window.GestorSonido();
@@ -329,7 +321,7 @@ if (typeof window.GestorSonido !== 'undefined') {
     console.warn("Sonido.js no está cargado. El museo funcionará sin audio.");
 }
 
-try { renderer.compile(scene, camera); } catch (e) {} // Pre-compila shaders para evitar tirones
+try { renderer.compile(scene, camera); } catch (e) {}
 
 // ==========================================
 // LÓGICA DE PAUSA Y POINTER LOCK
@@ -338,7 +330,6 @@ let pausado = false;
 let pointerEstuvoBloqueado = false;
 let estabaMostrandoInfo = false;
 
-// Verifica si hay CUALQUIER panel (normal o modal) abierto en pantalla
 function panelInfoVisible() {
     const pi = document.getElementById('panelInfo');
     const mc = document.getElementById('modalCarta');
@@ -347,7 +338,6 @@ function panelInfoVisible() {
     return piVisible || mcVisible;
 }
 
-// Pide permiso al navegador para capturar el ratón
 function bloquearPuntero() {
     try {
         const p = document.body.requestPointerLock();
@@ -355,15 +345,13 @@ function bloquearPuntero() {
     } catch (e) {}
 }
 
-// Abre el menú de pausa (tecla P o botón X)
 function abrirPausa() {
     if (pausado) return;
     jugador.enJuego = false;
     pausado = true;
     
-    if (gestorSonido) gestorSonido.pausar(); // Detiene la música
+    if (gestorSonido) gestorSonido.pausar();
 
-    // Oculta cualquier panel abierto
     const pi = document.getElementById('panelInfo');
     if (pi) pi.style.display = 'none';
     const mc = document.getElementById('modalCarta');
@@ -375,7 +363,6 @@ function abrirPausa() {
     document.getElementById('cross').style.display = 'none';
 }
 
-// Cierra la pausa y vuelve al juego
 function cerrarPausa() {
     if (!pausado) return;
     pausado = false;
@@ -384,12 +371,11 @@ function cerrarPausa() {
     document.getElementById('cross').style.display = 'block';
     jugador.enJuego = true;
 
-    if (gestorSonido) gestorSonido.reanudar(); // Reanuda la música
+    if (gestorSonido) gestorSonido.reanudar();
 
     bloquearPuntero();
 }
 
-// Vuelve al menú principal (Intro)
 function salirAlIntro() {
     pausado = false;
     jugador.enJuego = false;
@@ -409,29 +395,25 @@ function salirAlIntro() {
     document.getElementById('cross').style.display = 'none';
 }
 
-// Botón "Entrar al Museo"
 document.getElementById('btnEntrar').addEventListener('click', () => {
     document.getElementById('intro').style.display = 'none';
     document.getElementById('salir').style.display = 'block';
     document.getElementById('hud').style.display = 'block';
     document.getElementById('cross').style.display = 'block';
-    // Posiciona al jugador en la entrada
     jugador.pos.set(0, window.OJO_Y, 35);
     jugador.yaw = 0; jugador.pitch = 0;
     jugador.enJuego = true;
 
-    if (gestorSonido) gestorSonido.iniciar(); // Enciende la música aprovechando el clic
+    if (gestorSonido) gestorSonido.iniciar();
 
     bloquearPuntero();
 });
 
-// Eventos de los botones de pausa e interfaz
 document.getElementById('salir').addEventListener('click', salirAlIntro);
 document.getElementById('pausaContinuar').addEventListener('click', cerrarPausa);
 document.getElementById('pausaCerrar').addEventListener('click', cerrarPausa);
 document.getElementById('pausaSalir').addEventListener('click', salirAlIntro);
 
-// Atajo de teclado para pausar (P)
 window.addEventListener('keydown', (e) => {
     if (e.code !== 'KeyP') return;
     const intro = document.getElementById('intro');
@@ -441,7 +423,6 @@ window.addEventListener('keydown', (e) => {
     else abrirPausa();
 });
 
-// Maneja qué pasa cuando el jugador presiona Esc (pierde el control del ratón)
 document.addEventListener('pointerlockchange', () => {
     const locked = document.pointerLockElement === document.body;
     if (locked) { pointerEstuvoBloqueado = true; return; }
@@ -455,7 +436,6 @@ document.addEventListener('pointerlockchange', () => {
     }, 150);
 });
 
-// Permite volver a bloquear el ratón si se hace clic en la pantalla
 document.addEventListener('click', (e) => {
     if (e.target.closest('button') || e.target.closest('a')) return;
     if (pausado) return;
@@ -473,7 +453,6 @@ function animar() {
     const dt = Math.min(delta, 0.1); 
     monitorear(delta);
 
-    // Lógica para re-bloquear el ratón si se acaba de cerrar un panel
     const piVisible = panelInfoVisible();
     if (estabaMostrandoInfo && !piVisible && !pausado && !jugador.enJuego) {
         const intro = document.getElementById('intro');
@@ -485,7 +464,6 @@ function animar() {
     }
     estabaMostrandoInfo = piVisible;
 
-    // Anima las piezas de oro que flotan en el centro del lobby
     if (window.objetosFlotantes && window.objetosFlotantes.length) {
         const time = reloj.getElapsedTime();
         const lista = window.objetosFlotantes;
@@ -497,24 +475,19 @@ function animar() {
         }
     }
 
-    // Actualiza el movimiento y las colisiones del jugador
     jugador.actualizar(dt);
 
-    // Envía la posición del jugador al gestor de sonido para saber qué música suena
     if (gestorSonido) {
         gestorSonido.actualizar(jugador.pos.x, jugador.pos.z, dt);
     }
 
-    // Renderiza el fotograma
     renderer.render(scene, camera);
 }
 
-// Ajusta la cámara si el usuario redimensiona la ventana
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Inicia el bucle por primera vez
 animar();
