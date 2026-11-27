@@ -38,6 +38,8 @@ const MODELOS_GLB = {
 
     // --- SALA 4 ---
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
+    43: { archivo: 'modelos/Sala4/colgante_tolima.glb', dx: 0 }, // NUEVA PIEZA
+    44: { archivo: 'modelos/Sala4/pinzas.glb', dx: 0 },          // NUEVA PIEZA
 
     // --- SALA 6: ESPADA DE BOLÍVAR (ID 42) ---
     42: { archivo: 'modelos/Sala6/espada_de_bolivar.glb', dx: 0, alto: 1.4, ancho: 0.8 }, 

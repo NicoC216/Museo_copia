@@ -266,6 +266,16 @@ const PIEZAS_DATA = [
         descripcion: "Ornamento nasal. Ornamento nasal de lámina de oro martillada, con una pieza central en forma de media luna y dos volutas laterales. El museo lo atribuye con reservas a Colombia y su cultura de origen no está confirmada.",
         modelo: "nariguera_dorada", pos: new THREE.Vector3(-16, 0, -38), centroSala: new THREE.Vector3(-16, 0, -32)
     },
+    {
+        id: 43, nombre: "Colgante Tolima", cultura: "Tolima siglos V–X", museo: " The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante Tolima. Los tolima del valle del Magdalena hicieron durante siglos colgantes casi planos, de contornos nítidos y simétricos, con rasgos humanos y animales, que se llevaban al cuello colgados de cordones. Sus referencias animales (murciélagos, aves, serpientes) se han relacionado con el chamanismo.",
+        modelo: "colgante_tolima", pos: new THREE.Vector3(-22, 0, -32), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 44, nombre: "Pinzas", cultura: "Tolima siglos V–X", museo: " The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Pinzas de oro. pinzas de oro rematadas en una figurita con tocado de puntas sobre una base en forma de media luna. El Met no las asigna a una cultura, solo a Colombia: la orfebrería incluía objetos de uso personal o cotidiano, no solo ornamentos.",
+        modelo: "pinzas", pos: new THREE.Vector3(-10, 0, -32), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
     // AQUÍ ESTÁ LA PIEZA 33. SI NO ESTÁ, EL CONTADOR DIRÁ 32.
