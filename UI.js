@@ -2,7 +2,6 @@ let panelInfo;
 let modalCarta;
 
 window.inicializarUI = function() {
-    // 1. Panel normal
     panelInfo = document.createElement('div');
     panelInfo.id = 'panelInfo';
     panelInfo.innerHTML = `
@@ -18,7 +17,6 @@ window.inicializarUI = function() {
         panelInfo.style.display = 'none';
     });
 
-    // 2. Modal especial para la carta
     modalCarta = document.createElement('div');
     modalCarta.id = 'modalCarta';
     modalCarta.style.cssText = `
@@ -41,34 +39,41 @@ window.inicializarUI = function() {
     `;
     document.body.appendChild(modalCarta);
 
-    // Eventos del modal
     document.getElementById('btnCerrarCarta').addEventListener('click', () => {
         modalCarta.style.display = 'none';
     });
 
-    // Enlace al otro museo
     document.getElementById('btnFlechaDer').addEventListener('click', () => {
         window.location.href = 'https://ximenaflechas8a.github.io/museo-colombia/';
     });
 
-    // Botón por completar
     document.getElementById('btnFlechaIzq').addEventListener('click', () => {
         alert('¡Museo por completar! Pronto enlazaremos otra sala.');
     });
 };
 
-// Decide qué panel mostrar al hacer clic en un botón
 window.mostrarInfo = function(piezaData) {
-    // Si es la Espada de Bolívar, abrimos la carta
+    const esDocumento = (piezaData.id >= 52 && piezaData.id <= 57);
+
     if (piezaData.id === 42) {
         document.getElementById('tituloCarta').textContent = piezaData.nombre;
         document.getElementById('imgCarta').src = 'modelos/Sala6/carta_museo_del_oro.png'; 
         modalCarta.style.display = 'flex';
     } else {
-        // Para las demás piezas, mostramos el texto normal
         document.getElementById('infoTitulo').textContent = piezaData.nombre;
-        document.getElementById('infoCult').textContent = `Cultura: ${piezaData.cultura}`;
-        document.getElementById('infoMus').textContent = `Museo: ${piezaData.museo} (${piezaData.pais})`;
+        
+        if (esDocumento) {
+            // Ocultar campos irrelevantes para documentos
+            document.getElementById('infoCult').style.display = 'none';
+            document.getElementById('infoMus').style.display = 'none';
+        } else {
+            // Mostrarlos para las piezas de oro normales
+            document.getElementById('infoCult').style.display = 'block';
+            document.getElementById('infoMus').style.display = 'block';
+            document.getElementById('infoCult').textContent = `Cultura: ${piezaData.cultura}`;
+            document.getElementById('infoMus').textContent = `Museo: ${piezaData.museo} (${piezaData.pais})`;
+        }
+        
         document.getElementById('infoDesc').textContent = piezaData.descripcion;
         panelInfo.style.display = 'block';
     }

@@ -36,6 +36,15 @@ const MODELOS_GLB = {
     34: { archivo: 'modelos/Sala3/s3-05_labret_1974.glb', dx: 0 },
     35: { archivo: 'modelos/Sala3/tapa_de_labret.glb', dx: 0 },
 
+    // --- SALA 5: DOCUMENTOS Y PERIÓDICOS ---
+    // Nota: Los nombres con espacios se manejan bien en GitHub, pero si hay error, cámbiales el nombre a guiones bajos.
+    52: { archivo: 'modelos/Sala5/pergamino 1.glb', dx: 0, alto: 0.8, ancho: 1.0 },
+    53: { archivo: 'modelos/Sala5/pergamino 2.glb', dx: 0, alto: 0.8, ancho: 1.0 },
+    54: { archivo: 'modelos/Sala5/pergamino_3.glb', dx: 0, alto: 0.8, ancho: 1.0 },
+    55: { archivo: 'modelos/Sala5/periodico_4.glb', dx: 0, alto: 0.8, ancho: 1.0 },
+    56: { archivo: 'modelos/Sala5/periodico_5.glb', dx: 0, alto: 0.8, ancho: 1.0 },
+    57: { archivo: 'modelos/Sala5/periodico_6.glb', dx: 0, alto: 0.8, ancho: 1.0 },
+
     // --- SALA 4: EL RESTO DE COLOMBIA ---
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
     43: { archivo: 'modelos/Sala4/colgante_tolima.glb', dx: 0 },

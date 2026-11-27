@@ -313,6 +313,39 @@ const PIEZAS_DATA = [
         modelo: "pinzas", pos: new THREE.Vector3(-10, 0, -28), centroSala: new THREE.Vector3(-16, 0, -32)
     },
 
+    // --- SALA 5: DOCUMENTOS Y PERIÓDICOS ---
+    // Distribuidos en las paredes laterales de la sala 5
+    {
+        id: 52, nombre: "Pergamino 1", cultura: "", museo: "", pais: "",
+        descripcion: "Relato del pergamino 1: Se cree que este documento fue escrito por un cronista español en el siglo XVI... (Ficha por completar)",
+        modelo: "pergamino 1", pos: new THREE.Vector3(-5, 0, -36), centroSala: new THREE.Vector3(0, 0, -32)
+    },
+    {
+        id: 53, nombre: "Pergamino 2", cultura: "", museo: "", pais: "",
+        descripcion: "Relato del pergamino 2: En los archivos de Indias se encontró una carta que menciona el trueque de estas piezas... (Ficha por completar)",
+        modelo: "pergamino 2", pos: new THREE.Vector3(-5, 0, -32), centroSala: new THREE.Vector3(0, 0, -32)
+    },
+    {
+        id: 54, nombre: "Pergamino 3", cultura: "", museo: "", pais: "",
+        descripcion: "Relato del pergamino 3: La ruta del oro cambió para siempre cuando los barcos partieron hacia Europa... (Ficha por completar)",
+        modelo: "pergamino_3", pos: new THREE.Vector3(-5, 0, -28), centroSala: new THREE.Vector3(0, 0, -32)
+    },
+    {
+        id: 55, nombre: "Periódico 4", cultura: "", museo: "", pais: "",
+        descripcion: "Noticia del periódico 4: Hallazgo arqueológico revela la magnitud del saqueo en el siglo XIX. (Ficha por completar)",
+        modelo: "periodico_4", pos: new THREE.Vector3(5, 0, -36), centroSala: new THREE.Vector3(0, 0, -32)
+    },
+    {
+        id: 56, nombre: "Periódico 5", cultura: "", museo: "", pais: "",
+        descripcion: "Noticia del periódico 5: Subasta en Londres causa polémica por la venta de piezas precolombinas. (Ficha por completar)",
+        modelo: "periodico_5", pos: new THREE.Vector3(5, 0, -32), centroSala: new THREE.Vector3(0, 0, -32)
+    },
+    {
+        id: 57, nombre: "Periódico 6", cultura: "", museo: "", pais: "",
+        descripcion: "Noticia del periódico 6: Campaña internacional exige la repatriación del patrimonio colombiano. (Ficha por completar)",
+        modelo: "periodico_6", pos: new THREE.Vector3(5, 0, -28), centroSala: new THREE.Vector3(0, 0, -32)
+    },
+
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
     // AQUÍ ESTÁ LA PIEZA 33. SI NO ESTÁ, EL CONTADOR DIRÁ 32.
     {
