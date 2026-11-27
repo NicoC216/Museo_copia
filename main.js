@@ -268,20 +268,20 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
-    // Esta es la pieza número 33 de la lista. Si no está aquí, no se generará nada.
+    // AQUÍ ESTÁ EL OBJETO DE LA ESPADA (Pieza #33)
     {
         id: 42, nombre: "Espada de Bolívar", cultura: "Época de la Independencia", museo: "Museo del Oro (Bogotá, Colombia)", pais: "Colombia",
         descripcion: "Pieza que conecta con el Museo del Oro.",
         modelo: "espada_de_bolivar", 
         pos: new THREE.Vector3(16, 0, -32), 
-        centroSala: new THREE.Vector3(16, 0, -24) // Coordenada para que el botón mire hacia la entrada
+        centroSala: new THREE.Vector3(16, 0, -24) // Diferente a pos para evitar error NaN y que el botón mire hacia la entrada
     }
 ];
 
 const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
 
-// Debería imprimir 33 en la consola
+// ESTE LOG DEBE DECIR 33
 console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
 
 let piezasCargadas = 0;
