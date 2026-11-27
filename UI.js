@@ -1,8 +1,8 @@
-let panelInfo;   // Panel para piezas normales
-let modalCarta;  // Panel especial para la Carta de la Espada de Bolívar
+let panelInfo;
+let modalCarta;
 
 window.inicializarUI = function() {
-    // 1. Creamos el panel normal de información
+    // 1. Panel normal
     panelInfo = document.createElement('div');
     panelInfo.id = 'panelInfo';
     panelInfo.innerHTML = `
@@ -18,10 +18,9 @@ window.inicializarUI = function() {
         panelInfo.style.display = 'none';
     });
 
-    // 2. Creamos el modal para la imagen de la carta
+    // 2. Modal especial para la carta
     modalCarta = document.createElement('div');
     modalCarta.id = 'modalCarta';
-    // Estilos en línea para asegurar que se vea bien sin depender de archivos externos
     modalCarta.style.cssText = `
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         background: rgba(10, 10, 10, 0.95); border: 2px solid #c9a227; border-radius: 10px;
@@ -30,7 +29,6 @@ window.inicializarUI = function() {
         flex-direction: column; align-items: center; max-width: 90vw;
     `;
 
-    // Estructura interna del modal (imagen + 3 botones)
     modalCarta.innerHTML = `
         <h2 id="tituloCarta" style="color:#e6c65c; margin-bottom: 15px;"></h2>
         <img id="imgCarta" src="" alt="Carta" style="max-width: 70vw; max-height: 60vh; border: 2px solid #333; border-radius: 5px; object-fit: contain;">
@@ -43,31 +41,31 @@ window.inicializarUI = function() {
     `;
     document.body.appendChild(modalCarta);
 
-    // Eventos de los botones del modal
+    // Eventos del modal
     document.getElementById('btnCerrarCarta').addEventListener('click', () => {
         modalCarta.style.display = 'none';
     });
 
-    // Botón de la flecha derecha: Redirige al otro museo
+    // Enlace al otro museo
     document.getElementById('btnFlechaDer').addEventListener('click', () => {
         window.location.href = 'https://ximenaflechas8a.github.io/museo-colombia/';
     });
 
-    // Botón de la flecha izquierda: Mensaje temporal
+    // Botón por completar
     document.getElementById('btnFlechaIzq').addEventListener('click', () => {
         alert('¡Museo por completar! Pronto enlazaremos otra sala.');
     });
 };
 
-// Esta función decide qué mostrar dependiendo de qué pieza se hizo clic
+// Decide qué panel mostrar al hacer clic en un botón
 window.mostrarInfo = function(piezaData) {
-    // Si la pieza es la Espada de Bolívar (ID 42), abre el modal de la imagen
+    // Si es la Espada de Bolívar, abrimos la carta
     if (piezaData.id === 42) {
         document.getElementById('tituloCarta').textContent = piezaData.nombre;
-        document.getElementById('imgCarta').src = 'modelos/Sala6/carta_museo_del_oro.png'; // Ruta de la imagen
+        document.getElementById('imgCarta').src = 'modelos/Sala6/carta_museo_del_oro.png'; 
         modalCarta.style.display = 'flex';
     } else {
-        // Para las demás piezas, muestra el texto normal
+        // Para las demás piezas, mostramos el texto normal
         document.getElementById('infoTitulo').textContent = piezaData.nombre;
         document.getElementById('infoCult').textContent = `Cultura: ${piezaData.cultura}`;
         document.getElementById('infoMus').textContent = `Museo: ${piezaData.museo} (${piezaData.pais})`;

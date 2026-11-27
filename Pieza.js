@@ -75,7 +75,6 @@ window.Pieza = class Pieza {
         this.boton = null;
         this.piezaMesh = new THREE.Group();
 
-        // LOG DE CONTROL: Confirma que la pieza se está intentando crear
         console.log(`[Vitrina] Generando pieza ID: ${this.datos.id} en pos:`, this.datos.pos);
 
         const dx = this.centroSala.x - this.datos.pos.x;
@@ -227,7 +226,7 @@ window.Pieza = class Pieza {
     }
 
     crearProcedural() {
-        // Si el ID es 42 (Espada de Bolívar), dibuja una espada que se vea bien
+        // Si el ID es 42 (Espada de Bolívar), dibuja una espada grande y visible
         if (this.datos.id === 42) {
             const hoja = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.2, 0.02), window.matOro);
             hoja.position.y = 0.3;
@@ -266,7 +265,6 @@ window.Pieza = class Pieza {
         dirAlCentro.y = 0;
         dirAlCentro.normalize();
         
-        // Coloca el botón 0.9 unidades frente a la vitrina, mirando al pasillo
         this.boton.position.set(x, 1.2, z).add(dirAlCentro.clone().multiplyScalar(0.9));
         this.boton.rotation.y = this.anguloRotacion;
         this.boton.userData = { pieza: this.datos };

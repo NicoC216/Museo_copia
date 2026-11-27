@@ -268,16 +268,22 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
-    // Centro de la sala 6: X=16, Z=-32.
+    // Esta es la pieza número 33 de la lista. Si no está aquí, no se generará nada.
     {
         id: 42, nombre: "Espada de Bolívar", cultura: "Época de la Independencia", museo: "Museo del Oro (Bogotá, Colombia)", pais: "Colombia",
         descripcion: "Pieza que conecta con el Museo del Oro.",
-        modelo: "espada_de_bolivar", pos: new THREE.Vector3(16, 0, -32), centroSala: new THREE.Vector3(16, 0, -24)
+        modelo: "espada_de_bolivar", 
+        pos: new THREE.Vector3(16, 0, -32), 
+        centroSala: new THREE.Vector3(16, 0, -24) // Coordenada para que el botón mire hacia la entrada
     }
 ];
 
 const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
+
+// Debería imprimir 33 en la consola
+console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
+
 let piezasCargadas = 0;
 
 const divCargando = document.getElementById('cargando');
@@ -293,7 +299,6 @@ function actualizarCarga() {
 }
 actualizarCarga();
 
-// Se agrega un try-catch para que si una pieza falla, no detenga todo el museo
 PIEZAS_DATA.forEach((datos) => {
     try {
         const p = new window.Pieza(datos, scene, datos.centroSala, colisiones, () => {
@@ -303,7 +308,7 @@ PIEZAS_DATA.forEach((datos) => {
         botones.push(p.boton);
     } catch (error) {
         console.error(`Error crítico al generar la pieza ID ${datos.id}:`, error);
-        piezasCargadas++; // Forzamos el conteo para que no se quede en "Cargando..."
+        piezasCargadas++;
         actualizarCarga();
     }
 });
