@@ -268,20 +268,22 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
-    // AQUÍ ESTÁ EL OBJETO DE LA ESPADA (Pieza #33)
+    // AQUÍ ESTÁ LA PIEZA 33. SI NO ESTÁ, EL CONTADOR DIRÁ 32.
     {
         id: 42, nombre: "Espada de Bolívar", cultura: "Época de la Independencia", museo: "Museo del Oro (Bogotá, Colombia)", pais: "Colombia",
         descripcion: "Pieza que conecta con el Museo del Oro.",
         modelo: "espada_de_bolivar", 
         pos: new THREE.Vector3(16, 0, -32), 
-        centroSala: new THREE.Vector3(16, 0, -24) // Diferente a pos para evitar error NaN y que el botón mire hacia la entrada
+        centroSala: new THREE.Vector3(16, 0, -24) 
     }
 ];
 
+// Aquí el sistema cuenta cuántos objetos hay en la lista de arriba.
+// Si dice 32, es porque el objeto de arriba no se guardó en el archivo.
 const botones = [];
 const totalPiezas = PIEZAS_DATA.length;
 
-// ESTE LOG DEBE DECIR 33
+// ESTE LOG DEBE IMPRIMIR 33 EN LA CONSOLA
 console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
 
 let piezasCargadas = 0;
