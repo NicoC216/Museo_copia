@@ -261,20 +261,56 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 4: EL RESTO DE COLOMBIA ---
+    // Distribución: Fondo (Z=-38), Laterales (X=-22 y X=-10), Centro-fondo (Z=-34)
+    {
+        id: 45, nombre: "Adorno de brazo", cultura: "Calima (Yotoco), 100 a. C.–800 d. C.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Adorno de brazo. Desde el último siglo antes de la Era Común hasta el siglo IX, los orfebres del suroeste de Colombia crearon insignias corporales completas para que los líderes las lucieran en vida y tras su muerte: adornos para las orejas, diademas, pectorales y objetos en forma de pinzas que se llevaban colgados de un cordón atado al brazo. Este ejemplar presenta un rostro en relieve, bridas bilaterales y una hoja en forma de media luna en la base.",
+        modelo: "adorno_de_brazo", pos: new THREE.Vector3(-21, 0, -38), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
     {
         id: 6, nombre: "Ornamento nasal", cultura: "Colombia (origen atribuido con reservas), siglos X–XVI. Oro martillado.", museo: "The Met (Nueva York, EE. UU.)", pais: "Estados Unidos",
         descripcion: "Ornamento nasal. Ornamento nasal de lámina de oro martillada, con una pieza central en forma de media luna y dos volutas laterales. El museo lo atribuye con reservas a Colombia y su cultura de origen no está confirmada.",
         modelo: "nariguera_dorada", pos: new THREE.Vector3(-16, 0, -38), centroSala: new THREE.Vector3(-16, 0, -32)
     },
     {
-        id: 43, nombre: "Colgante Tolima", cultura: "Tolima siglos V–X", museo: " The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
-        descripcion: "Colgante Tolima. Los tolima del valle del Magdalena hicieron durante siglos colgantes casi planos, de contornos nítidos y simétricos, con rasgos humanos y animales, que se llevaban al cuello colgados de cordones. Sus referencias animales (murciélagos, aves, serpientes) se han relacionado con el chamanismo.",
-        modelo: "colgante_tolima", pos: new THREE.Vector3(-22, 0, -32), centroSala: new THREE.Vector3(-16, 0, -32)
+        id: 46, nombre: "Adorno nasal ", cultura: "Zenú, 1–1000 d. C.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Adorno nasal. Los adornos nasales se hicieron en multitud de formas y estilos a lo largo de milenios, y las figuras humanas en cerámica y metal muestran cómo se usaban. Los adornos largos y pesados con extremos anchos, como este, se colocan en el tabique nasal. Los de la región zenú, en el noroeste de Colombia, suelen hacerse con delicada filigrana fundida de elementos trenzados y en espiral.",
+        modelo: "adorno_nasal", pos: new THREE.Vector3(-11, 0, -38), centroSala: new THREE.Vector3(-16, 0, -32)
     },
     {
-        id: 44, nombre: "Pinzas", cultura: "Tolima siglos V–X", museo: " The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
-        descripcion: "Pinzas de oro. pinzas de oro rematadas en una figurita con tocado de puntas sobre una base en forma de media luna. El Met no las asigna a una cultura, solo a Colombia: la orfebrería incluía objetos de uso personal o cotidiano, no solo ornamentos.",
-        modelo: "pinzas", pos: new THREE.Vector3(-10, 0, -32), centroSala: new THREE.Vector3(-16, 0, -32)
+        id: 51, nombre: "Remate con forma de pájaro", cultura: "Zenú o sinú, siglos V–X ·", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Remate con forma de pájaro. Remate de oro con forma de pájaro. El Met lo atribuye a la cultura zenú o sinú sin decidir entre ambas. Pendiente: el archivo fuente no trae descripción de esta pieza; se deja solo lo que dice la ficha.",
+        modelo: "remate_con_forma_de_pajaro", pos: new THREE.Vector3(-16, 0, -34), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 47, nombre: "Adorno para la oreja", cultura: "Zenú, 1–1000 d. C.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Adorno para la oreja. Adorno para la oreja hecho a la cera perdida. La pieza completa se modeló en cera en una sola etapa y parece filigrana, pero esos elementos en forma de alambre se construyeron en cera y luego se fundieron en metal. En la superficie de ambos lados se ven granos metálicos grandes, de forma arborescente, lo que sugiere que el molde se precalentó y el metal se enfrió lentamente.",
+        modelo: "adorno_para_la_oreja", pos: new THREE.Vector3(-22, 0, -32), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 43, nombre: "Colgante Tolima", cultura: "Tolima siglos V-X", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Colgante Tolima. Los tolima del valle del Magdalena hicieron durante siglos colgantes casi planos, de contornos nítidos y simétricos, con rasgos humanos y animales, que se llevaban al cuello colgados de cordones. Sus referencias animales (murciélagos, aves, serpientes) se han relacionado con el chamanismo.",
+        modelo: "colgante_tolima", pos: new THREE.Vector3(-22, 0, -28), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 48, nombre: "Adorno para tocado", cultura: "Calima (Yotoco), 100 a. C.–700 d. C.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Adorno para tocado. Cinco rayos salen a cada lado de este adorno de tocado, alrededor de dos medias lunas centrales y de un rostro en alto relieve. Los rayos podrían imitar el plumaje de un tocado de plumas. Cada dos rayos llevan colgantes sujetos con pequeños alambres de oro, que aumentan de seis a ocho y a diez de arriba abajo; faltan tres en el rayo inferior derecho. Al moverse quien lo llevaba, los colgantes se balanceaban y tintineaban.",
+        modelo: "adorno_para_tocado", pos: new THREE.Vector3(-22, 0, -36), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 49, nombre: "Cabeza de bastón de búho", cultura: "Zenú, 1–1000 d. C.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Cabeza de bastón de búho. Se cree que los remates de bastón de las tierras bajas del noroeste del Caribe colombiano se colocaban en bastones de rango o de oficio. Tienen una tapa en forma de dedal rematada con aves, animales locales y figuras humanas en tres dimensiones. Este büho posado en el borde tiene la cabeza ancha, girada en ángulo recto respecto al cuerpo, con ojos circulares y pico pronunciado, enmarcada por un elemento trenzado y coronada por una cresta estriada. El pecho es de filigrana calada fundida, en contraste con las alas pulidas.",
+        modelo: "cabeza_de_baston_de_buho", pos: new THREE.Vector3(-10, 0, -32), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 50, nombre: "Pectoral con cara", cultura: "Calima (Yotoco), siglos I–VII", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Pectoral con cara. Un gran colgante nasal en forma de H oculta casi por completo el rostro en el centro de este pectoral con forma de riñón. Ambas formas son características del arte calima del período Yotoco, la segunda de tres sociedades (Ilama, Yotoco-Malagana y Sonso) que ocuparon sucesivamente el Valle del Cauca y que se conocen en conjunto como cultura calima.",
+        modelo: "pectoral_con_cara", pos: new THREE.Vector3(-10, 0, -36), centroSala: new THREE.Vector3(-16, 0, -32)
+    },
+    {
+        id: 44, nombre: "Pinzas", cultura: "siglos V–X.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
+        descripcion: "Pinzas de oro. Pinzas de oro rematadas en una figurita con tocado de puntas sobre una base en forma de media luna. El Met no las asigna a una cultura, solo a Colombia: la orfebrería incluía objetos de uso personal o cotidiano, no solo ornamentos.",
+        modelo: "pinzas", pos: new THREE.Vector3(-10, 0, -28), centroSala: new THREE.Vector3(-16, 0, -32)
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---

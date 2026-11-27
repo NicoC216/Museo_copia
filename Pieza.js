@@ -36,10 +36,17 @@ const MODELOS_GLB = {
     34: { archivo: 'modelos/Sala3/s3-05_labret_1974.glb', dx: 0 },
     35: { archivo: 'modelos/Sala3/tapa_de_labret.glb', dx: 0 },
 
-    // --- SALA 4 ---
+    // --- SALA 4: EL RESTO DE COLOMBIA ---
     6: { archivo: 'modelos/Sala4/nariguera_dorada.glb', dx: 0 },
-    43: { archivo: 'modelos/Sala4/colgante_tolima.glb', dx: 0 }, // NUEVA PIEZA
-    44: { archivo: 'modelos/Sala4/pinzas.glb', dx: 0 },          // NUEVA PIEZA
+    43: { archivo: 'modelos/Sala4/colgante_tolima.glb', dx: 0 },
+    44: { archivo: 'modelos/Sala4/pinzas.glb', dx: 0 },
+    45: { archivo: 'modelos/Sala4/adorno_de_brazo.glb', dx: 0 },
+    46: { archivo: 'modelos/Sala4/adorno_nasal.glb', dx: 0 },
+    47: { archivo: 'modelos/Sala4/adorno_para_la_oreja.glb', dx: 0 },
+    48: { archivo: 'modelos/Sala4/adorno_para_tocado.glb', dx: 0 },
+    49: { archivo: 'modelos/Sala4/cabeza_de_baston_de_buho.glb', dx: 0 },
+    50: { archivo: 'modelos/Sala4/pectoral_con_cara.glb', dx: 0 },
+    51: { archivo: 'modelos/Sala4/remate_con_forma_de_pajaro.glb', dx: 0 }, // Ajusta el nombre si es necesario
 
     // --- SALA 6: ESPADA DE BOLÍVAR (ID 42) ---
     42: { archivo: 'modelos/Sala6/espada_de_bolivar.glb', dx: 0, alto: 1.4, ancho: 0.8 }, 
