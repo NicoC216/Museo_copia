@@ -357,6 +357,88 @@ const PIEZAS_DATA = [
     }
 ];
 
+// ==========================================
+// DATOS DE LOS PERGAMINOS (EASTER EGG)
+// ==========================================
+const PERGAMINOS_DATA = [
+    {
+        id: 1, sala: "Sala 1", pos: new THREE.Vector3(-24, 2.5, 12), 
+        img: 'modelos/Pergaminos/nota_1_el_relato.png',
+        texto: "Nos contaron siempre la historia de un tesoro escondido: el de un metal sagrado que desaparecía bajo el agua en medio de un ritual antiguo. Nos enseñaron a imaginarlo lejos, envuelto en misterio..."
+    },
+    {
+        id: 2, sala: "Sala 2", pos: new THREE.Vector3(-24, 2.5, -12), 
+        img: 'modelos/Pergaminos/nota_2_el_otro_rumbo.png',
+        texto: "...pero mientras mirábamos hacia la leyenda, el verdadero oro seguía otro camino. Piezas fundidas para la ofrenda, hechas para quedarse en su tierra, terminaron cruzando el mar en silencio."
+    },
+    {
+        id: 3, sala: "Sala 3", pos: new THREE.Vector3(-24, 2.5, -38), 
+        img: 'modelos/Pergaminos/nota_3_la_salida.png',
+        texto: "Unas salieron con sellos oficiales y firmas de cortesía; otras fueron arrancadas de la tierra sin permiso, convertidas en mercancía para vitrinas y colecciones privadas."
+    },
+    {
+        id: 4, sala: "Sala 4", pos: new THREE.Vector3(-8, 2.5, -38), 
+        img: 'modelos/Pergaminos/nota_4_la_perdida_del_origen.png',
+        texto: "Con el viaje perdieron el nombre de quien las creó, el sonido de su lengua y el lugar exacto donde debían descansar. Quedó el brillo del metal, pero se borró su origen."
+    },
+    {
+        id: 5, sala: "Sala 5", pos: new THREE.Vector3(8, 2.5, -38), 
+        img: 'modelos/Pergaminos/nota_5_lo_que_no_se_vio.png',
+        texto: "Algunos buscaron durante siglos secar las aguas para rescatar lo que creían perdido. No notaron que lo que realmente se había vaciado no estaba bajo el lodo, sino en nuestra propia memoria."
+    },
+    {
+        id: 6, sala: "Sala 6", pos: new THREE.Vector3(24, 2.5, -32), 
+        img: 'modelos/Pergaminos/nota_6_la_verdadera_laguna.png',
+        texto: "Al final, esa es la verdadera laguna de Guatavita: no un fondo inalcanzable en las montañas, sino todas las vitrinas del mundo donde nuestro oro desapareció a plena vista."
+    }
+];
+
+// ==========================================
+// CREACIÓN DE LOS OBJETOS 3D DE LOS PERGAMINOS
+// ==========================================
+const geomPergamino = new THREE.OctahedronGeometry(0.25); // Forma de diamante/pieza
+const matPergamino = new THREE.MeshStandardMaterial({ 
+    color: 0xffd700, 
+    emissive: 0xffaa00, 
+    emissiveIntensity: 2,
+    metalness: 0.8,
+    roughness: 0.2
+});
+
+PERGAMINOS_DATA.forEach(pData => {
+    // Objeto 3D flotante
+    const mesh = new THREE.Mesh(geomPergamino, matPergamino);
+    mesh.position.copy(pData.pos);
+    mesh.castShadow = false;
+    
+    // Luz brillante para que resalte
+    const luz = new THREE.PointLight(0xffaa00, 1.5, 5);
+    mesh.add(luz);
+
+    // Lo añadimos a la escena y lo guardamos en el arreglo de objetos clickeables
+    scene.add(mesh);
+    
+    // Lo tratamos igual que un botón, pero con su propia etiqueta
+    mesh.userData = { 
+        esPergamino: true, 
+        data: pData 
+    };
+    botones.push(mesh);
+
+    // Animación de rotación para que llame la atención
+    window.objetosFlotantes.push({
+        mesh: mesh,
+        baseY: pData.pos.y,
+        speedY: 1.5,
+        speedX: 1.0,
+        floatSpeed: 2,
+        offset: Math.random() * Math.PI * 2
+    });
+});
+
+// Inicializar la UI y el contador al arrancar
+window.actualizarContadorPergaminos();
+
 // Aquí el sistema cuenta cuántos objetos hay en la lista de arriba.
 // Si dice 32, es porque el objeto de arriba no se guardó en el archivo.
 const botones = [];
