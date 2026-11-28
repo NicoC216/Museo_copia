@@ -261,7 +261,6 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 4: EL RESTO DE COLOMBIA ---
-    // Distribución: Fondo (Z=-38), Laterales (X=-22 y X=-10), Centro-fondo (Z=-34)
     {
         id: 45, nombre: "Adorno de brazo", cultura: "Calima (Yotoco), 100 a. C.–800 d. C.", museo: "The Metropolitan Museum of Art (Nueva York, EE. UU.)", pais: "Estados Unidos",
         descripcion: "Adorno de brazo. Desde el último siglo antes de la Era Común hasta el siglo IX, los orfebres del suroeste de Colombia crearon insignias corporales completas para que los líderes las lucieran en vida y tras su muerte: adornos para las orejas, diademas, pectorales y objetos en forma de pinzas que se llevaban colgados de un cordón atado al brazo. Este ejemplar presenta un rostro en relieve, bridas bilaterales y una hoja en forma de media luna en la base.",
@@ -314,7 +313,6 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 5: DOCUMENTOS Y PERIÓDICOS ---
-    // Distribuidos en las paredes laterales de la sala 5
     {
         id: 52, nombre: "Pergamino 1", cultura: "", museo: "", pais: "",
         descripcion: "Relato del pergamino 1: Se cree que este documento fue escrito por un cronista español en el siglo XVI... (Ficha por completar)",
@@ -347,7 +345,6 @@ const PIEZAS_DATA = [
     },
 
     // --- SALA 6: CONEXIÓN (ESPADA DE BOLÍVAR) ---
-    // AQUÍ ESTÁ LA PIEZA 33. SI NO ESTÁ, EL CONTADOR DIRÁ 32.
     {
         id: 42, nombre: "Espada de Bolívar", cultura: "Época de la Independencia", museo: "Museo del Oro (Bogotá, Colombia)", pais: "Colombia",
         descripcion: "Pieza que conecta con el Museo del Oro.",
@@ -394,9 +391,16 @@ const PERGAMINOS_DATA = [
 ];
 
 // ==========================================
+// DECLARACIÓN DE VARIABLES GLOBALES DE CONTROL
+// (Movido aquí arriba para solucionar el error de inicialización)
+// ==========================================
+const botones = [];
+const totalPiezas = PIEZAS_DATA.length;
+
+// ==========================================
 // CREACIÓN DE LOS OBJETOS 3D DE LOS PERGAMINOS
 // ==========================================
-const geomPergamino = new THREE.OctahedronGeometry(0.25); // Forma de diamante/pieza
+const geomPergamino = new THREE.OctahedronGeometry(0.25);
 const matPergamino = new THREE.MeshStandardMaterial({ 
     color: 0xffd700, 
     emissive: 0xffaa00, 
@@ -406,26 +410,21 @@ const matPergamino = new THREE.MeshStandardMaterial({
 });
 
 PERGAMINOS_DATA.forEach(pData => {
-    // Objeto 3D flotante
     const mesh = new THREE.Mesh(geomPergamino, matPergamino);
     mesh.position.copy(pData.pos);
     mesh.castShadow = false;
     
-    // Luz brillante para que resalte
     const luz = new THREE.PointLight(0xffaa00, 1.5, 5);
     mesh.add(luz);
 
-    // Lo añadimos a la escena y lo guardamos en el arreglo de objetos clickeables
     scene.add(mesh);
     
-    // Lo tratamos igual que un botón, pero con su propia etiqueta
     mesh.userData = { 
         esPergamino: true, 
         data: pData 
     };
-    botones.push(mesh);
+    botones.push(mesh); // Ahora 'botones' ya existe, no dará error.
 
-    // Animación de rotación para que llame la atención
     window.objetosFlotantes.push({
         mesh: mesh,
         baseY: pData.pos.y,
@@ -439,12 +438,6 @@ PERGAMINOS_DATA.forEach(pData => {
 // Inicializar la UI y el contador al arrancar
 window.actualizarContadorPergaminos();
 
-// Aquí el sistema cuenta cuántos objetos hay en la lista de arriba.
-// Si dice 32, es porque el objeto de arriba no se guardó en el archivo.
-const botones = [];
-const totalPiezas = PIEZAS_DATA.length;
-
-// ESTE LOG DEBE IMPRIMIR 33 EN LA CONSOLA
 console.log(`[Sistema] Total de piezas a renderizar en el museo: ${totalPiezas}`); 
 
 let piezasCargadas = 0;
@@ -572,6 +565,7 @@ document.getElementById('btnEntrar').addEventListener('click', () => {
     document.getElementById('salir').style.display = 'block';
     document.getElementById('hud').style.display = 'block';
     document.getElementById('cross').style.display = 'block';
+    document.getElementById('hud-pergaminos').style.display = 'block'; // Mostrar el contador
     jugador.pos.set(0, window.OJO_Y, 35);
     jugador.yaw = 0; jugador.pitch = 0;
     jugador.enJuego = true;
