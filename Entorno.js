@@ -426,9 +426,15 @@ window.crearMuseo = function(scene) {
     crearBox(0.5, window.PARED_H, 0.5, -11, window.PARED_H / 2, -11, window.matPared, false);
     crearBox(0.5, window.PARED_H, 0.5, 11, window.PARED_H / 2, -11, window.matPared, false);
 
+    // CARTELES DE LAS SALAS
     crearCartel("Sala 1", -23.7, 3.5, 26, Math.PI / 2);
     crearCartel("Sala 2", -23.7, 3.5, 0, Math.PI / 2);
     crearCartel("Sala 3", -23.7, 3.5, -26, Math.PI / 2);
+    
+    // NUEVOS CARTELES INDICADORES PARA LA SALA 3
+    crearCartel("<- Sala 3", -23.7, 3.5, -10, Math.PI / 2); // En la pared de la Sala 2
+    crearCartel("<- Sala 3", -20, 3.5, -23.7, 0); // En la pared cerca de la Sala 4
+
     crearCartel("Sala 4", -16, 3.5, -23.7, 0);
     crearCartel("Sala 5", 0, 3.5, -23.7, 0);
     crearCartel("Sala 6", 16, 3.5, -23.7, 0);
